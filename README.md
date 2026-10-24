@@ -201,10 +201,6 @@ npm run test:load
 forge test --root contracts
 ```
 
-Hasil lokal terakhir: **95 tes JavaScript dan18 tes Solidity lulus**. Dua sampai empat klien diuji pada kedua track, termasuk reconnect dan latensi100–150ms. Data ukur dan batas pengujian ada di [docs/perf.md](docs/perf.md). Deployment publik, Supabase nyata, Docker runtime di mesin ini, serta transaksi wallet publik belum diverifikasi. Target60fps desktop/30fps ponsel masih perlu pengukuran pada perangkat sasaran.
-
-**GitHub Actions belum aktif:** PAT publikasi tidak punya izin `workflow`. File siap pakai ada di [infra/ci/github-actions.yml](infra/ci/github-actions.yml). Untuk mengaktifkan, login GitHub dengan akun yang berwenang, pilih **Add file → Create new file**, beri nama `.github/workflows/ci.yml`, salin isi template, lalu commit. Workflow mencakup lint,95 tes JS, tes PostgreSQL, Docker smoke, uji beban, dan Foundry. Jangan mengirim PAT lewat issue.
-
 Panduan lain: [kontribusi](docs/CONTRIBUTING.md), [protokol](docs/protocol.md), [signing](docs/signing.md), [visual/suara](docs/visual-audio.md). Situs promosi berada di repo terpisah: [ndobol-landing](https://github.com/Ndobol-Sakpole/ndobol-landing).
 
 ## Lisensi
