@@ -253,9 +253,16 @@ test("real WebSocket transport with injected 100/150ms RTT preserves close rende
     for (const timer of timers) clearTimeout(timer);
     clients.forEach((c) => c.close());
   });
+  let invalidUntil = 0, delayedPackets = 0, maxTimerLateness = 0;
   function later(ms, fn) {
+    const due = Date.now() + ms;
     const timer = setTimeout(() => {
       timers.delete(timer);
+      const lateness = Math.max(0, Date.now() - due);
+      maxTimerLateness = Math.max(maxTimerLateness, lateness);
+      // A stalled test host did not deliver the promised 100/150ms RTT.
+      // Let the two snapshot buffers refill before measuring that latency case.
+      if (lateness > 20) { delayedPackets++; invalidUntil = Date.now() + GAME.interpolationMs + 200; }
       fn();
     }, ms);
     timers.add(timer);
@@ -286,8 +293,9 @@ test("real WebSocket transport with injected 100/150ms RTT preserves close rende
         });
       }
     }
-    const states = renderers.map((r) => r.sample(Date.now()));
-    if (states.every((s) => s?.phase === "running")) {
+    const sampleTime = Date.now();
+    const states = renderers.map((r) => r.sample(sampleTime));
+    if (sampleTime >= invalidUntil && states.every((s) => s?.phase === "running")) {
       comparisons++;
       worst = Math.max(worst, Math.abs(states[0].s - states[1].s));
       for (let i = 0; i < 2; i++) {
@@ -297,12 +305,12 @@ test("real WebSocket transport with injected 100/150ms RTT preserves close rende
     }
     await delay(35);
   }
-  assert.ok(comparisons > 20);
+  assert.ok(comparisons > 20, `Only ${comparisons} valid timing comparisons; host too stalled for this RTT fixture`);
   assert.ok(worst < 0.55, `render drift ${worst.toFixed(3)}m`);
   const room = api.roomServer.rooms.get(clients[0].joined.code);
   assert.ok(room.round.state.players.slice(0, 2).every((p) => p.lastSeq > 0));
   t.diagnostic(
-    `Injected RTT 100/150ms: ${comparisons} comparisons, max raft divergence ${worst.toFixed(3)}m`,
+    `Injected RTT 100/150ms: ${comparisons} valid comparisons, max raft divergence ${worst.toFixed(3)}m; ${delayedPackets} host-delayed deliveries, max timer lateness ${maxTimerLateness}ms`,
   );
 });
 
