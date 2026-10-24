@@ -2,6 +2,8 @@
 
 # Ndobol Sesarengan
 
+Ikuti kabar dan perkembangan proyek: [LinkedIn · Ndobol Sesarengan](https://www.linkedin.com/company/ndobol-sesarengan/) · [X · @NdobolSakpole](https://x.com/NdobolSakpole).
+
 **Satu getek. Banyak tingkah.** Game browser 3D untuk 1–4 pemain. Berjalanlah di atas rakit bambu untuk menjaga keseimbangan, putar badan, lalu **tahan Spasi untuk kentut dan mendorong getek**. Ambil sampah, hindari rintangan, dan usahakan semua kru sampai finis.
 
 Sungainya terinspirasi **Selokan Mataram** dan **Kali Progo**. Mataram punya dinding kanal dan jembatan; Progo punya batu besar dan bagian berarus deras. Dunia, karakter, getek, tekstur, serta suara dibuat dari kode. Logo memakai aset asli proyek.
