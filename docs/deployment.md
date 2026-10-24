@@ -89,3 +89,6 @@ References: [Render Node selection](https://render.com/docs/node-version), [Rend
 Supabase key update: use `SUPABASE_SECRET_KEY=sb_secret_…` on Render and the local .env. The existing `SUPABASE_SERVICE_ROLE_KEY` name is still accepted for legacy installs. New keys are opaque, so the adapter sends them as apikey without a JWT Authorization header. Public `NEXT_PUBLIC_SUPABASE_*` snippets are not consumed by this native frontend. [Supabase API key documentation](https://supabase.com/docs/guides/getting-started/api-keys). Setup walkthrough: [quickstart-rewards.md](quickstart-rewards.md).
 
 Startup compatibility: preparing SIGNER_PRIVATE_KEY before a verifier exists no longer stops the API when claims are disabled; the public signing/enabled flags remain false. Setting REWARD_CLAIMS_ENABLED=true without a signer and pool fails startup. Message and contract interfaces are unchanged.
+
+## Pembaruan: gas dibayar pengelola
+Server publik kini memakai kontrak baru `0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579` dan gas sponsor. Angka biaya pemain pada uji awal di atas adalah riwayat. `testnet:prepare` menyiapkan tiga key terpisah; `FUND_GAS_MON` + `testnet:rewards -- fund-relayer` mengisi wallet gas. Supabase perlu migrasi002. Ikuti [panduan sponsor](sponsored-claims.md) dan README untuk alur terbaru.

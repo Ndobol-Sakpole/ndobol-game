@@ -10,7 +10,7 @@ Sungainya terinspirasi **Selokan Mataram** dan **Kali Progo**. Mataram punya din
 
 Proyek ini open source, dibuat oleh tim **DeEs**. Anda boleh menjalankan, mempelajari, dan mengembangkan kodenya sesuai [lisensi MIT](LICENSE). Ini masih prototipe: belum ada marketplace atau pembelian getek. Semua getek di garasi bebas dicoba.
 
-**Main lewat internet:** [buka Ndobol Sesarengan](https://ndobol-game-teal.vercel.app/apps/web/index.html). Buka dengan browser yang memiliki MetaMask atau wallet EVM lain. Web Vercel, API Render, dan database Supabase sudah tersambung. **Klaim test MON sudah aktif dan transaksi uji berhasil**; lihat [bukti transaksi](#bukti-kesiapan-dan-transaksi-monad-testnet) di bawah. Jika halaman sudah terbuka sebelum aktivasi, muat ulang lalu login dan mainkan ronde baru.
+**Main lewat internet:** [buka Ndobol Sesarengan](https://ndobol-game-teal.vercel.app/apps/web/index.html). Buka dengan browser yang memiliki MetaMask atau wallet EVM lain. Web Vercel, API Render, dan database Supabase sudah tersambung. **Klaim test MON aktif dengan gas ditanggung pengelola**; lihat [bukti transaksi](#bukti-kesiapan-dan-transaksi-monad-testnet) di bawah. Jika halaman sudah terbuka sebelum aktivasi, muat ulang lalu login dan mainkan ronde baru.
 
 ## Baca ini sebelum mulai
 
@@ -93,18 +93,18 @@ Alur klaim:
 1. Ronde selesai dan pemain selamat.
 2. Server menyimpan hasil serta memeriksa berat/skor.
 3. Server membuat bukti bertanda tangan EIP-712.
-4. Pemain menekan **Klaim MON**, lalu menyetujui transaksi di wallet.
+4. Pemain menekan **Klaim MON · tanpa gas**. Server pengelola mengirim transaksi; wallet pemain tidak diminta membayar gas.
 5. Kontrak membayar test MON dari pool yang sebelumnya diisi pengelola. UI baru menampilkan status dibayar setelah receipt dan event pembayaran cocok.
 
-Pemain memerlukan test MON untuk biaya gas klaim. Ambil melalui [faucet Monad](https://faucet.monad.xyz). Klaim yang sama tidak bisa dibayar dua kali. Server publik proyek ini sudah memakai pool testnet yang didanai. **Jika menjalankan salinan sendiri**, ikuti bagian 4 untuk mengaktifkan reward server Anda; alamat dan key tidak diaktifkan otomatis oleh proses instalasi.
+Pada server publik ini, **pemain boleh mulai dengan saldo 0 MON**. Gas klaim dibayar wallet relayer pengelola dan reward masuk penuh ke saldo MON pemain. Klaim yang sama tidak bisa dibayar dua kali. Server publik proyek ini sudah memakai pool testnet yang didanai. **Jika menjalankan salinan sendiri**, ikuti bagian 4 untuk mengaktifkan reward server Anda; alamat dan key tidak diaktifkan otomatis oleh proses instalasi.
 
-Biaya gas dibayar terpisah dan bisa lebih besar daripada reward. Pada transaksi uji di bawah, reward **0,00000059 test MON** dan gas **0,01336914 test MON**. Jadi saldo total wallet berkurang setelah biaya gas, walaupun reward benar-benar diterima. Nilai reward bukan janji keuntungan bersih.
+Gas jaringan tetap ada dan dapat lebih besar daripada reward, tetapi **sekarang dibayar pengelola**. Jika saldo gas pengelola habis atau batas subsidi tercapai, klaim ditunda; pemain tidak otomatis ditagih. Ini tetap test MON di Monad Testnet, bukan penghasilan uang nyata.
 
 ## 4. Menyalakan reward di Monad Testnet — untuk pengelola
 
 Langkah ini diperlukan hanya jika ingin membayar reward. Siapkan wallet pengelola dengan test MON, alamat owner, serta wallet signer server yang terpisah. Jangan bagikan private key di chat, GitHub, atau frontend.
 
-1. Dari folder proyek, jalankan `npm run testnet:prepare`. Perintah ini membuat **`.env`**, menyiapkan wallet deployer dan signer terpisah, serta menampilkan alamat publiknya. Jika file/key sudah ada, isinya dipertahankan. Simpan cadangan `.env` secara privat; jangan menimpa file ini setelah wallet diisi.
+1. Dari folder proyek, jalankan `npm run testnet:prepare`. Perintah ini membuat **`.env`**, menyiapkan wallet deployer, signer, dan relayer terpisah, serta menampilkan alamat publiknya. Jika file/key sudah ada, isinya dipertahankan. Simpan cadangan `.env` secara privat; jangan menimpa file ini setelah wallet diisi.
 2. Kirim test MON ke alamat **deployer** yang muncul: MetaMask → pilih Monad Testnet → **Kirim/Send** → alamat deployer → isi jumlah → konfirmasi. Untuk demo, siapkan 1 test MON untuk gas dan pool awal; biaya gas dapat berubah. Owner bawaan adalah deployer; untuk memakai wallet pengelola lain, isi alamat publiknya pada `CONTRACT_OWNER` sebelum deploy.
 3. Pasang [Foundry](https://getfoundry.sh/). Jalankan `forge build --root contracts` lalu `forge test --root contracts`. Signer tidak memerlukan saldo; jangan kirim dana pool ke alamat signer.
 4. Deploy kontrak:
@@ -121,7 +121,8 @@ npm run testnet:rewards -- check
 ```
 
 6. Setelah pemeriksaan benar, pool berisi dana dan tidak paused, isi `SIGNING_CHAIN_ID=10143` dan `REWARD_CLAIMS_ENABLED=true`. Restart server dengan Ctrl+C lalu `npm run dev`.
-7. Mainkan ronde baru, ambil sampah sendiri, selesaikan tanpa mati, kemudian klaim dari wallet yang sama.
+7. Untuk klaim tanpa gas pemain, gunakan alamat **relayer** dari `npm run testnet:prepare`. Isi `FUND_GAS_MON=0.20` di `.env`, lalu jalankan `npm run testnet:rewards -- fund-relayer` untuk mengirim dana gas dari deployer. Key relayer sudah disimpan privat di `RELAYER_PRIVATE_KEY`; set `REWARD_SPONSOR_ENABLED=true`, `RELAYER_DAILY_BUDGET_MON=0.1`, dan `RELAYER_MAX_GAS_PRICE_WEI=150000000000`. Jangan gunakan wallet signer/deployer sebagai relayer. Panduan rinci: [klaim bersubsidi](docs/sponsored-claims.md).
+8. Restart server, pastikan `/rewards/config` menampilkan `sponsored:true`, lalu mainkan ronde baru dan klaim. Jika memakai Supabase, jalankan migrasi002 sebelum mengaktifkan sponsor.
 
 **Deploy dan fund mengirim transaksi.** Skrip menolak jaringan selain testnet 10143. Kontrak saat ini tidak menyediakan penarikan dana oleh owner; masukkan dana uji secukupnya. Alur lengkap, konfigurasi, dan batas pengujian ada di [panduan deployment](docs/deployment.md) serta [reward](docs/rewards.md).
 
@@ -129,17 +130,148 @@ Panduan langkah sederhana untuk database, wallet deployer, deploy, isi pool, dan
 
 ## Bukti kesiapan dan transaksi Monad Testnet
 
-Jaringan: **Monad Testnet**, chain ID **10143**. Pemeriksaan pada **24 Oktober 2026**:
+Jaringan **Monad Testnet, chain ID 10143**. Server publik memakai gas sponsor. Status terbaru: [API health](https://ndobol-game.onrender.com/health) dan [konfigurasi reward](https://ndobol-game.onrender.com/rewards/config), dengan `enabled:true` serta `sponsored:true`.
 
-| Layanan | Bukti yang sudah diperiksa |
+- **Pool reward aktif:** [`0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579`](https://testnet.monadscan.com/address/0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579).
+- **Wallet gas pengelola:** [`0xC723c3b0F3A284C0356eF5C0536B218999f52363`](https://testnet.monadscan.com/address/0xC723c3b0F3A284C0356eF5C0536B218999f52363).
+- Supabase menyimpan hasil, bukti server, dan transaksi sponsor sebelum broadcast. Klik ulang memeriksa hash yang sama.
+- Lint, 110 tes JavaScript, dan 20 tes Solidity lulus, termasuk 256 kasus fuzz. Ini bukan klaim audit eksternal.
+
+**Cara isi ulang:** di MetaMask pilih Monad Testnet → Kirim → tempel alamat **pool** untuk menambah reward, atau alamat **wallet gas** untuk membayar gas → isi jumlah test MON → konfirmasi. Jangan tertukar dengan alamat signer. Pool tidak menyediakan penarikan dana; gunakan dana demo secukupnya. Saldo awal pool 0,01 test MON dan saldo awal wallet gas 0,20 test MON. Batas subsidi 0,10 test MON/hari UTC dapat diubah oleh pengelola di Render.
+
+### Bukti saldo bertambah tanpa gas pemain — 24 Oktober 2026
+
+Saya menjalankan game publik dari awal sampai finis memakai kontrol keyboard otomatis, satu pemain nyata dan tiga bot. Wallet uji adalah EOA baru yang menandatangani login lewat adaptor EIP-1193 pengujian; **bukan screenshot extension MetaMask**. Tidak ada skor atau saldo yang direkayasa. Simulasi, hasil, signature, dan transaksi berasal dari Render, Supabase, serta Monad Testnet yang aktif.
+
+| Pemeriksaan | Hasil |
 | --- | --- |
-| [Web Vercel](https://ndobol-game-teal.vercel.app/apps/web/index.html) | Scene 3D dan tombol mulai tampil; modul Three.js dan protokol tersedia. |
-| [API Render](https://ndobol-game.onrender.com/health) | Deploy sukses; `ok:true`, protokol 4, simulasi 30 Hz. |
-| Supabase | Migrasi berhasil; leaderboard kedua track terbaca melalui API server. |
-| Ronde publik otomatis | Mataram dan Progo mencapai finis; hasil tersimpan. Uji ulang Mataram menerima layar hasil dengan status penyimpanan sukses. [Catatan rinci](docs/cloud-verification-2026-10-24.json). |
-| Pengujian lokal | 104 tes JavaScript, lint, dan build Vercel lulus. |
+| Wallet pemain | [`0x5d1287F5B80e58004b1D23Ee4E00b2D3B7185cF6`](https://testnet.monadscan.com/address/0x5d1287F5B80e58004b1D23Ee4E00b2D3B7185cF6) |
+| Ronde | Selokan Mataram; finis dalam 84 detik; pemain mengambil 2 benda / **36 gram** |
+| Saldo pemain sebelum klaim | **0 test MON** |
+| Reward | **0,00000036 test MON** |
+| Saldo pemain sesudah klaim | **0,00000036 test MON** — bertambah utuh |
+| Gas dibayar pemain | **0 MON**; jumlah transaksi keluar pemain tetap **0** |
+| Gas dibayar pengelola | **0,020579724 test MON**, dari wallet relayer |
+| Klik/periksa klaim ulang | Hash yang sama, status confirmed; tidak membayar dua kali |
+| Browser | Chrome 155, desktop 1440×1000; hasil juga diperiksa pada 390×844; tidak ada console/page error |
 
-Status klaim dapat dilihat di [konfigurasi reward publik](https://ndobol-game.onrender.com/rewards/config): `chainId:10143`, alamat pool di bawah, dan `enabled:true`. API health juga mengembalikan `signing:true`.
+[Transaksi klaim sponsor yang berhasil](https://testnet.monadscan.com/tx/0xef295ac0ad11808509011f81f8bf6365282d13c3d4f5b040b66f35153cd4945a), blok **73796451**, pada **24 Oktober 2026 pukul 18:00:23 WIB**. Di explorer, **From** adalah wallet relayer, sedangkan **Internal Transactions** menunjukkan transfer ke pemain. Kolom Value 0 MON adalah nilai transaksi panggilan kontrak, bukan berarti reward nol.
+
+#### Langkah 1 — Buka game
+
+Tampilan awal menampilkan sungai dan tombol **CONNECT & START**. Wallet belum perlu punya saldo untuk mode sponsor.
+
+![Halaman awal game](docs/screenshots/sponsored/04-start-game.png)
+
+#### Langkah 2 — Hubungkan wallet dan login
+
+Wallet harus berada pada Monad Testnet 10143. Pemain menandatangani pesan login; tidak ada transfer MON atau biaya gas pada langkah ini.
+
+![Login wallet tanpa biaya gas](docs/screenshots/sponsored/05-wallet-login.png)
+
+#### Langkah 3 — Pilih permainan, karakter, lalu buat room
+
+Uji ini memilih Selokan Mataram dan karakter Bebek. Pemain dapat membuat room sendiri atau bergabung lewat kode teman.
+
+![Pilihan permainan](docs/screenshots/sponsored/06-pilih-permainan.png)
+
+#### Langkah 4 — Siap dan mulai
+
+Klik **Buat room → Siap → Mulai**. Slot kosong diisi tiga bot saat ronde dimulai; kode pada screenshot adalah contoh ronde uji, bukan room permanen.
+
+![Room siap dimainkan](docs/screenshots/sponsored/07-room-siap.png)
+
+#### Langkah 5 — Countdown dan pengantar sungai
+
+Server memulai hitung mundur. Semua pemain masuk ke ronde yang sama setelah countdown.
+
+![Countdown awal ronde](docs/screenshots/sponsored/08-countdown.png)
+
+#### Langkah 6 — Mainkan getek dan ambil sampah
+
+Tahan Spasi untuk dorongan, arahkan badan, jaga keseimbangan dengan WASD, dan ambil sampah menggunakan Q/E. Angka besar pada HUD adalah total tim; reward pribadi hanya berasal dari sampah yang diambil pemain manusia sendiri.
+
+![Getek berjalan dengan dorongan kentut](docs/screenshots/sponsored/09-gameplay-10s.png)
+
+![Menjaga keseimbangan di bawah jembatan](docs/screenshots/sponsored/09-gameplay-35s.png)
+
+![Mendekati finis dengan sampah terkumpul](docs/screenshots/sponsored/09-gameplay-65s.png)
+
+#### Langkah 7 — Periksa hasil ronde
+
+Tim mencapai finis tanpa mati. Pemain uji memiliki 36 gram; baris bot tidak mendapatkan reward wallet. Server sudah menyimpan hasil dan menyiapkan bukti EIP-712. Klik **Klaim … MON · tanpa gas**.
+
+![Hasil sebelum klaim](docs/screenshots/sponsored/10-hasil-sebelum-klaim.png)
+
+#### Langkah 8 — Pengelola membayar transaksi klaim
+
+Tombol memanggil API sponsor. Wallet pemain **tidak** diminta menandatangani transaksi berbayar. Status pending diperiksa hingga receipt dan event pembayaran cocok; jangan menyamakan pending dengan uang sudah diterima.
+
+![Status pemrosesan klaim](docs/screenshots/sponsored/11-klaim-diproses.png)
+
+#### Langkah 9 — Reward masuk penuh
+
+Game menampilkan **Reward masuk · gas pemain 0** dan tautan transaksi. Saldo wallet uji benar-benar naik 0,00000036 MON, dibuktikan lewat pembacaan blockchain sebelum/sesudah.
+
+![Klaim berhasil dengan biaya pemain nol](docs/screenshots/sponsored/12-reward-masuk.png)
+
+![Saldo wallet pemain di MonadScan](docs/screenshots/sponsored/15-saldo-wallet.png)
+
+<details>
+<summary>Tampilan hasil pada ukuran layar ponsel</summary>
+
+Pemeriksaan ini memakai viewport 390×844 di browser desktop, bukan pengukuran FPS perangkat ponsel fisik.
+
+![Hasil pada layar kecil](docs/screenshots/sponsored/14-mobile-results.png)
+
+</details>
+
+### Bukti setiap transaksi untuk aktivasi sponsor
+
+Empat transaksi berikut berhasil. Dana dan gas hanya memakai **test MON**, tidak ada transaksi mainnet.
+
+#### Transaksi 1 — Deploy kontrak reward baru
+
+Kontrak baru menyediakan `claimFor`: pengelola membayar gas, tetapi reward selalu masuk ke penerima yang ditandatangani server. [Lihat transaksi deploy](https://testnet.monadscan.com/tx/0xd9ad78ebb4bd6113ca58363d677e10c652553c8c9c97a674262814fa6b7c9176).
+
+![Deploy kontrak sponsor berhasil](docs/screenshots/sponsored/01-deploy-contract.png)
+
+#### Transaksi 2 — Isi pool reward
+
+Pengelola mengirim **0,01 test MON** ke kontrak baru. Saldo inilah yang membayar reward pemain. [Lihat pengisian pool](https://testnet.monadscan.com/tx/0xa3fe80d60d95299111162860a26bd2df0a37a495a41404cc78126d8517847362).
+
+![Pengisian pool reward berhasil](docs/screenshots/sponsored/02-fund-reward-pool.png)
+
+#### Transaksi 3 — Isi wallet gas pengelola
+
+Pengelola mengirim **0,20 test MON** ke wallet relayer terpisah. Saldo ini membayar biaya transaksi klaim, bukan dipotong dari reward pemain. [Lihat pengisian wallet gas](https://testnet.monadscan.com/tx/0x885b812166208984185aa759d651cec5ea8dde713fe26342d4d89e6fe3de806a).
+
+![Pengisian wallet gas berhasil](docs/screenshots/sponsored/03-fund-gas-wallet.png)
+
+#### Transaksi 4 — Bayar reward pemain
+
+Relayer memanggil kontrak; kontrak mentransfer **0,00000036 test MON** ke pemain. Status explorer **Success** dan event `RewardClaimed` cocok. [Lihat transaksi klaim](https://testnet.monadscan.com/tx/0xef295ac0ad11808509011f81f8bf6365282d13c3d4f5b040b66f35153cd4945a).
+
+![Transaksi klaim dengan relayer sebagai pembayar gas](docs/screenshots/sponsored/13-transaksi-klaim.png)
+
+Sesudah uji: pool berisi **0,00999964 test MON**, wallet gas **0,179420276 test MON**. Saldo dapat berubah setelah top-up atau klaim lain. [Rekaman publik lengkap](docs/sponsored-testnet-deployment.json) memuat hash, penerima, biaya, saldo, dan pemeriksaan browser. Cara menyiapkan server sendiri serta batas sponsor dijelaskan di [panduan gas sponsor](docs/sponsored-claims.md).
+
+<details>
+<summary>Bukti persiapan Supabase dan Render</summary>
+
+Migrasi sponsor selesai dengan hasil Success. API menggunakan konfigurasi pool baru dan key relayer khusus; tidak ada private key pada screenshot atau kode browser.
+
+![Migrasi Supabase berhasil](docs/screenshots/sponsored/00-database-ready.png)
+
+![API sponsor live di Render](docs/screenshots/sponsored/00-api-live.png)
+
+</details>
+
+
+<details>
+<summary>Riwayat uji sebelumnya: klaim dengan gas dibayar pemain (sudah digantikan)</summary>
+
+Alamat di bawah adalah **pool lama**, bukan tujuan top-up layanan saat ini. Uji ini membuktikan pembayaran awal, tetapi biaya gasnya mengurangi saldo pemain. Kontrak baru di atas memperbaiki alur tersebut dengan sponsor pengelola.
 
 Kontrak RiverRewards: [`0x94cb1588221e14f34563eede5401646df3730d4a`](https://testnet.monadscan.com/address/0x94cb1588221e14f34563eede5401646df3730d4a).
 
@@ -153,7 +285,8 @@ Klaim uji memakai wallet deployer `0x97e495Ba652eBDAFA41E6611053A61e41c4813f3` s
 
 Saldo pool sesudah klaim uji: **0,00999941 test MON** pada 24 Oktober 2026 pukul 17:42 WIB; saldo selanjutnya berubah sesuai klaim/top-up. Hash lengkap, nominal wei, dan receipt ada di [rekaman deployment](docs/monad-testnet-deployment.json). Status `enabled:true` saja tidak membuktikan pembayaran; tabel di atas memakai receipt sukses dan event on-chain.
 
-Untuk **isi ulang pool proyek ini**, pilih Monad Testnet di MetaMask → Kirim/Send → tempel **alamat kontrak RiverRewards di atas** → isi jumlah test MON → periksa alamat/jaringan lalu konfirmasi. Tidak perlu deploy ulang. Pool tidak menyediakan penarikan oleh owner, jadi masukkan dana demo secukupnya. Panduan salinan proyek sendiri: [deploy dan isi pool](docs/quickstart-rewards.md); catatan uji: [docs/perf.md](docs/perf.md).
+
+</details>
 
 ## 5. Pasang di internet: Vercel + Render + Supabase
 
@@ -167,7 +300,7 @@ Tiga layanan ini punya tugas berbeda:
 
 ### A. Supabase
 
-Buat project Supabase. Buka **SQL Editor**, tempel isi [data/supabase/001_game.sql](data/supabase/001_game.sql), lalu jalankan. Simpan Project URL dan **secret key** (`sb_secret_…`) untuk Render. Key ini tidak boleh berada di Vercel atau file browser.
+Buat project Supabase. Buka **SQL Editor**, tempel isi [data/supabase/001_game.sql](data/supabase/001_game.sql), lalu jalankan. Setelah itu jalankan [002_sponsored_claims.sql](data/supabase/002_sponsored_claims.sql) agar transaksi gas sponsor dapat dipulihkan setelah restart. Simpan Project URL dan **secret key** (`sb_secret_…`) untuk Render. Key ini tidak boleh berada di Vercel atau file browser.
 
 ### B. Render
 
@@ -198,7 +331,7 @@ Buka **Environment** lalu tambahkan:
 
 `ALLOWED_ORIGINS` harus alamat web yang dibuka pemain, **bukan alamat API Render**. Tanpa `/` di akhir atau `/apps/web/index.html`. Jika perlu beberapa alamat, pisahkan dengan koma. Jangan pakai `*`. Bila Vercel belum punya alamat, isi sementara `https://game.example.invalid`; ganti setelah langkah C agar login bisa diterima.
 
-Untuk pemasangan pertama tanpa kontrak, biarkan `REWARD_POOL_ADDRESS` kosong dan `REWARD_CLAIMS_ENABLED=false`. Key signer boleh sudah disiapkan; signing tetap nonaktif sampai alamat kontrak tersedia. Setelah kontrak dari langkah 4 siap, isi alamat pool dan aktifkan klaim. Jangan taruh key deployer di Render.
+Untuk pemasangan pertama tanpa kontrak, biarkan `REWARD_POOL_ADDRESS` kosong dan `REWARD_CLAIMS_ENABLED=false`. Key signer boleh sudah disiapkan; signing tetap nonaktif sampai alamat kontrak tersedia. Setelah kontrak dari langkah 4 siap, isi alamat pool, `SIGNER_PRIVATE_KEY`, dan aktifkan klaim. Untuk gas sponsor tambahkan `RELAYER_PRIVATE_KEY`, `REWARD_SPONSOR_ENABLED=true`, `RELAYER_DAILY_BUDGET_MON=0.1`, serta `RELAYER_MAX_GAS_PRICE_WEI=150000000000`. Key relayer harus milik wallet khusus gas yang sudah diisi test MON. Jangan taruh key deployer di Render.
 
 Simpan perubahan, lalu pilih **Manual Deploy → Deploy latest commit**. Periksa log sampai API berjalan. Layanan proyek ini: [https://ndobol-game.onrender.com/health](https://ndobol-game.onrender.com/health). Hasil yang benar memuat `"ok":true`. Untuk salinan proyek sendiri, gunakan URL Render Anda.
 
@@ -256,7 +389,7 @@ Buka URL lokal yang sama pada port 4174. Untuk berhenti, tekan Ctrl+C lalu `dock
 | API gagal setelah build berhasil | Periksa `ALLOWED_ORIGINS`, URL/key Supabase dan migrasi SQL. Selama belum ada kontrak, biarkan pool kosong dan flag klaim false. |
 | Klaim nonaktif | Selesaikan ronde server, ambil sampah sendiri, jangan mati; pengelola perlu menyiapkan key signer, kontrak, dana, dan flag klaim. |
 | Key signer sudah diisi tetapi klaim belum aktif | Key saja belum cukup. Buka `/rewards/config` pada API; jika `contract:null`, deploy kontrak lalu isi `REWARD_POOL_ADDRESS`. Danai pool sebelum mengaktifkan `REWARD_CLAIMS_ENABLED`. |
-| Transaksi klaim gagal | Periksa jaringan10143, wallet penerima, test MON untuk gas, batas waktu bukti, dan saldo pool. Jangan menganggap gagal berarti sudah dibayar. |
+| Klaim sponsor tertunda | Periksa pesan status: saldo pool, saldo gas pengelola, batas subsidi, masa berlaku bukti, atau RPC. Pemain tidak perlu top-up untuk gas. Jangan menganggap pending berarti sudah dibayar. |
 | Game lambat | Pilih kualitas rendah, tutup tab3D lain, aktifkan akselerasi grafis. |
 
 Untuk melaporkan bug, sertakan perangkat/browser, langkah kejadian, dan pesan error di [Issues](https://github.com/Ndobol-Sakpole/ndobol-game/issues). Jangan sertakan token, key, seed phrase, atau file `.env`.

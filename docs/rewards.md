@@ -69,3 +69,6 @@ Foundry mencakup pembayaran native tepat, replay round/nonce, nonce tidak beruru
 
 ## Current wallet-required rollout
 Public entry requires an origin-bound wallet signature and Monad Testnet. One human can create/ready/start with bots. Bots earn no MON; death forfeits reward. Supabase persistence and explicit deploy/fund/check workflow: [deployment.md](deployment.md). No cloud resource, wallet funding or contract deployment is performed by build/test.
+
+## Pembaruan: gas dibayar pengelola
+Server publik kini memakai kontrak baru `0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579` dan gas sponsor. Angka biaya pemain pada uji awal di atas adalah riwayat. `testnet:prepare` menyiapkan tiga key terpisah; `FUND_GAS_MON` + `testnet:rewards -- fund-relayer` mengisi wallet gas. Supabase perlu migrasi002. Ikuti [panduan sponsor](sponsored-claims.md) dan README untuk alur terbaru.

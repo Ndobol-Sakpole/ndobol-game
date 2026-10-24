@@ -31,7 +31,57 @@
   "dailyBudgetMON": "0.1",
   "maxGasPriceWei": "150000000000",
   "contract": "0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579",
-  "poolMON": "0.01",
-  "relayerMON": "0.2",
-  "verifiedAt": "2026-10-24T10:54:57.523Z"
+  "poolMON": "0.00999964",
+  "relayerMON": "0.179420276",
+  "verifiedAt": "2026-10-24T11:00:31.243Z",
+  "claim": {
+    "hash": "0xef295ac0ad11808509011f81f8bf6365282d13c3d4f5b040b66f35153cd4945a",
+    "status": "success",
+    "blockNumber": "73796451",
+    "roundId": "18881bf4-bd81-4a83-806b-d3c67a416b73",
+    "player": "0x5d1287F5B80e58004b1D23Ee4E00b2D3B7185cF6",
+    "relayer": "0xc723c3b0f3a284c0356ef5c0536b218999f52363",
+    "weightGrams": 36,
+    "rewardMON": "0.00000036",
+    "playerMONBefore": "0",
+    "playerMONAfter": "0.00000036",
+    "playerTransactionCount": 0,
+    "playerGasMON": "0",
+    "operatorGasMON": "0.020579724",
+    "duplicateRequestSameHash": true
+  },
+  "browserQA": {
+    "url": "https://ndobol-game-teal.vercel.app/apps/web/index.html",
+    "title": "Ndobol Sesarengan \u2014 Susuri sungai, rawat bersama",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "browser": "155.0.8059.85",
+    "wallet": "Real test EOA through EIP-1193 automation adapter; no MetaMask extension",
+    "methods": [
+      "eth_requestAccounts",
+      "eth_chainId",
+      "eth_accounts",
+      "personal_sign"
+    ],
+    "errors": [],
+    "steps": [
+      "04-start-game.png",
+      "05-wallet-login.png",
+      "06-pilih-permainan.png",
+      "07-room-siap.png",
+      "08-countdown.png",
+      "09-gameplay-10s.png",
+      "09-gameplay-35s.png",
+      "09-gameplay-65s.png",
+      "10-hasil-sebelum-klaim.png",
+      "11-klaim-diproses.png",
+      "12-reward-masuk.png",
+      "14-mobile-results.png",
+      "15-saldo-wallet.png"
+    ],
+    "verifiedAt": "2026-10-24T11:00:31.243Z",
+    "availability": "Browser plugin not available; Playwright skill fallback with existing Chrome"
+  }
 }

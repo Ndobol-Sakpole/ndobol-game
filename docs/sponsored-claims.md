@@ -6,7 +6,7 @@ Pemain menekan **Klaim … MON · tanpa gas** setelah ronde selesai. Server meng
 
 1. Pasang kontrak RiverRewards versi yang memiliki `claimFor`. Kontrak lama tidak bisa diubah; buktinya tidak berlaku pada kontrak baru. Mulai ronde baru setelah perpindahan. Pool lama tidak memiliki fungsi penarikan dan dananya tetap berada di alamat lama.
 2. Isi pool baru dengan test MON untuk pembayaran reward.
-3. Siapkan wallet relayer terpisah, isi test MON untuk gas, dan simpan private key hanya sebagai `RELAYER_PRIVATE_KEY` pada API. Jangan menaruhnya di Vercel, browser, README, atau Git. Jangan gunakan wallet itu untuk transaksi lain karena API mengatur noncenya.
+3. Jalankan `npm run testnet:prepare` untuk menyiapkan relayer terpisah tanpa mengganti key yang sudah ada. Isi `FUND_GAS_MON=0.20` di `.env`, lalu `npm run testnet:rewards -- fund-relayer` untuk mengisinya dari deployer, dan simpan private key hanya sebagai `RELAYER_PRIVATE_KEY` pada API. Jangan menaruhnya di Vercel, browser, README, atau Git. Jangan gunakan wallet itu untuk transaksi lain karena API mengatur noncenya.
 4. Di Supabase jalankan `data/supabase/002_sponsored_claims.sql` setelah migrasi pertama. SQLite melakukan migrasi006 otomatis.
 5. Set `REWARD_POOL_ADDRESS`, `REWARD_CLAIMS_ENABLED=true`, `REWARD_SPONSOR_ENABLED=true`, `SIGNING_CHAIN_ID=10143`. Signer tetap kunci server yang cocok dengan signer kontrak.
 6. Set `RELAYER_DAILY_BUDGET_MON=0.1` dan `RELAYER_MAX_GAS_PRICE_WEI=150000000000` sebagai batas awal. Batas harian dihitung per tanggal UTC, dari biaya maksimum yang dipesan sebelum broadcast; biaya gagal juga memakai kuota. Batas ini bukan kuota jumlah reward.

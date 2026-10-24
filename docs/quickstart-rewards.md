@@ -128,3 +128,6 @@ Untuk server lokal, gunakan nilai signer/pool yang sama di `.env`, `REWARD_CLAIM
 Ronde yang terbalik/tenggelam tidak bisa diklaim. Ronde tanpa sampah yang diambil manusia juga tidak memiliki reward. Signature atau angka estimasi saja belum membuktikan pembayaran.
 
 Referensi: [Supabase SQL Editor](https://supabase.com/docs/guides/database/overview), [Supabase keys](https://supabase.com/docs/guides/getting-started/api-keys), [Monad network](https://faucet.monad.xyz/add-network). Konfigurasi hosting lengkap: [deployment.md](deployment.md).
+
+## Pembaruan: gas dibayar pengelola
+Server publik kini memakai kontrak baru `0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579` dan gas sponsor. Angka biaya pemain pada uji awal di atas adalah riwayat. `testnet:prepare` menyiapkan tiga key terpisah; `FUND_GAS_MON` + `testnet:rewards -- fund-relayer` mengisi wallet gas. Supabase perlu migrasi002. Ikuti [panduan sponsor](sponsored-claims.md) dan README untuk alur terbaru.
