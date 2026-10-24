@@ -122,3 +122,5 @@ Native in-app browser at1280×800 and390×844: Start→garage prices (ban0.00015
 
 ## Public repository packaging
 The95-test suite and18 Solidity tests above were run locally. GitHub Actions is supplied as `infra/ci/github-actions.yml` because the publishing PAT lacks workflow scope. Copy it to `.github/workflows/ci.yml` using an authorized account to activate CI; no remote CI success is claimed.
+
+Release-check note: a fresh-install parallel suite passed94/95 with a0.749m latency-test outlier while other work ran on the host. The unchanged real-WebSocket test passed in isolation (160 comparisons, max0.038m). Test files now run serially to keep CPU-heavy fixtures from competing with the wall-clock latency measurement; thresholds are unchanged. Long host stalls remain a documented performance limitation.
