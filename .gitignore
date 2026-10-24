@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.DS_Store
+.env
+.env.*
+!.env.example
+coverage/
+tmp/
+
+# Game generated artifacts
+*.sqlite
+*.sqlite-*
+contracts/out/
+contracts/cache/
+contracts/broadcast/

@@ -1,0 +1,280 @@
+{
+  "id": "mahakam",
+  "name": "Kali Progo",
+  "region": "Yogyakarta",
+  "seed": 722,
+  "width": 24,
+  "palette": {
+    "water": "#8b7650",
+    "deep": "#514c30",
+    "grass": "#76854c",
+    "soil": "#7a5e3d",
+    "bamboo": "#55652b",
+    "leaf": "#506d36",
+    "sky": "#d1dac8",
+    "fog": "#c7ceba"
+  },
+  "flora": {
+    "bamboo": 0.8,
+    "coconut": 0.2
+  },
+  "path": [
+    [
+      0,
+      24
+    ],
+    [
+      -5,
+      -30
+    ],
+    [
+      -24,
+      -90
+    ],
+    [
+      -3,
+      -160
+    ],
+    [
+      20,
+      -215
+    ],
+    [
+      5,
+      -280
+    ],
+    [
+      -8,
+      -345
+    ]
+  ],
+  "obstacles": [
+    {
+      "type": "rock",
+      "s": 29,
+      "lateral": -7,
+      "radius": 1.7
+    },
+    {
+      "type": "hyacinth",
+      "s": 36,
+      "lateral": 7,
+      "radius": 2
+    },
+    {
+      "type": "log",
+      "s": 52,
+      "lateral": 1,
+      "radius": 2,
+      "sharp": true
+    },
+    {
+      "type": "rock",
+      "s": 66,
+      "lateral": -7,
+      "radius": 2.2
+    },
+    {
+      "type": "rock",
+      "s": 77,
+      "lateral": 5,
+      "radius": 2.0
+    },
+    {
+      "type": "hyacinth",
+      "s": 92,
+      "lateral": -4,
+      "radius": 2.2
+    },
+    {
+      "type": "rock",
+      "s": 96,
+      "lateral": -5,
+      "radius": 1.7
+    },
+    {
+      "type": "rock",
+      "s": 140,
+      "lateral": 5,
+      "radius": 1.7
+    },
+    {
+      "type": "rock",
+      "s": 162,
+      "lateral": 7,
+      "radius": 2.1
+    },
+    {
+      "type": "rock",
+      "s": 179,
+      "lateral": -7,
+      "radius": 2.0
+    },
+    {
+      "type": "log",
+      "s": 183,
+      "lateral": -3,
+      "radius": 2,
+      "sharp": true
+    },
+    {
+      "type": "rock",
+      "s": 204,
+      "lateral": 5,
+      "radius": 2.2
+    },
+    {
+      "type": "hyacinth",
+      "s": 241,
+      "lateral": 4,
+      "radius": 2
+    },
+    {
+      "type": "rock",
+      "s": 266,
+      "lateral": -6,
+      "radius": 2.1
+    },
+    {
+      "type": "rock",
+      "s": 285,
+      "lateral": 6,
+      "radius": 2.0
+    },
+    {
+      "type": "rock",
+      "s": 300,
+      "lateral": -4,
+      "radius": 1.6
+    },
+    {
+      "type": "rock",
+      "s": 314,
+      "lateral": -7,
+      "radius": 2.3
+    }
+  ],
+  "trash": [
+    {
+      "type": "bottle",
+      "s": 18,
+      "lateral": 0
+    },
+    {
+      "type": "bag",
+      "s": 24,
+      "lateral": 1
+    },
+    {
+      "type": "can",
+      "s": 32,
+      "lateral": -1
+    },
+    {
+      "type": "bag",
+      "s": 56,
+      "lateral": -4
+    },
+    {
+      "type": "bottle",
+      "s": 78,
+      "lateral": 2
+    },
+    {
+      "type": "can",
+      "s": 102,
+      "lateral": 3
+    },
+    {
+      "type": "bag",
+      "s": 136,
+      "lateral": -2
+    },
+    {
+      "type": "bottle",
+      "s": 172,
+      "lateral": 3
+    },
+    {
+      "type": "can",
+      "s": 210,
+      "lateral": -2
+    },
+    {
+      "type": "bag",
+      "s": 251,
+      "lateral": 1
+    },
+    {
+      "type": "can",
+      "s": 291,
+      "lateral": -1
+    },
+    {
+      "type": "bottle",
+      "s": 328,
+      "lateral": 0
+    }
+  ],
+  "animals": [
+    {
+      "type": "duck",
+      "s": 23,
+      "lateral": 4
+    },
+    {
+      "type": "proboscis",
+      "s": 30,
+      "lateral": -14
+    },
+    {
+      "type": "proboscis",
+      "s": 40,
+      "lateral": 15
+    },
+    {
+      "type": "buffalo",
+      "s": 37,
+      "lateral": 14
+    },
+    {
+      "type": "duck",
+      "s": 127,
+      "lateral": -6
+    },
+    {
+      "type": "proboscis",
+      "s": 215,
+      "lateral": -14
+    }
+  ],
+  "length": 383.720152885354,
+  "bank": {
+    "height": 3.1,
+    "variation": 2.2,
+    "slope": 7
+  },
+  "rapids": [
+    {
+      "start": 62,
+      "end": 99,
+      "speed": 2.6,
+      "cross": 0.75,
+      "chop": 0.18
+    },
+    {
+      "start": 164,
+      "end": 207,
+      "speed": 3.1,
+      "cross": -0.9,
+      "chop": 0.24
+    },
+    {
+      "start": 271,
+      "end": 312,
+      "speed": 2.8,
+      "cross": 0.65,
+      "chop": 0.2
+    }
+  ]
+}

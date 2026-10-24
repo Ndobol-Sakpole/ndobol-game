@@ -1,0 +1,2 @@
+# Three.js vendor
+Three.js **0.170.0**, MIT, `THREE-LICENSE`. Salinan lokal resmi dipakai secara default oleh import map agar offline setelah server berjalan. Sumber pinned/CDN: https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js . Tidak ada library 3D lain. Untuk CDN, ubah entri `three` pada import map; pertahankan file lokal ini sebagai cadangan. Tidak ada fetch CDN otomatis sehingga start deterministik tanpa jaringan luar.

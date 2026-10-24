@@ -1,0 +1,1153 @@
+/* Game chrome: compact controls around a readable, live 3D playfield. */
+:root {
+  --ink: #f6edcf;
+  --muted: #b5c5b6;
+  --paper: #183e35;
+  --lime: #f3cf70;
+  --line: #d2dfbd30;
+  font-family: ui-rounded, "Trebuchet MS", Arial, sans-serif;
+}
+body {
+  background: #9ed4c5;
+  color: var(--ink);
+}
+.topbar {
+  padding: 23px 30px;
+  align-items: flex-start;
+}
+.brand {
+  color: #fff5d4;
+  font-size: 31px;
+  letter-spacing: -1.3px;
+  text-shadow: 0 2px 3px #1b443e99;
+  line-height: 0.9;
+}
+.brand-mark {
+  background: #214d3c;
+  border-color: #ffe3a1;
+  color: #ffe3a1;
+  box-shadow: 0 4px 0 #14382f;
+  width: 47px;
+  height: 47px;
+}
+.brand-sub {
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+.icon-button,
+.location {
+  background: #163d34ed;
+  color: #f8edcc;
+  border: 1px solid #ffffff30;
+  box-shadow: 0 4px 0 #0d292433;
+  border-radius: 12px;
+}
+.location {
+  font-size: 12px;
+  margin-top: 5px;
+}
+.location-region {
+  color: #bfceb4;
+  border-color: #c5d5b333;
+}
+.location-dot {
+  background: #ecc864;
+}
+.icon-button:hover {
+  color: #243b2b;
+  background: #f3cf70;
+}
+.lobby {
+  background: linear-gradient(90deg, #102b3080, transparent 56%);
+}
+.lobby-copy {
+  width: 332px;
+  left: 30px;
+  top: 109px;
+  bottom: 190px;
+  padding: 23px;
+  overflow: auto;
+  background: #163c34f2;
+  border: 1px solid #b7ccaa50;
+  border-radius: 22px;
+  box-shadow: 0 12px 50px #123c383b;
+  scrollbar-color: #658b71 transparent;
+}
+.lobby h1 {
+  font-family: ui-rounded, "Trebuchet MS", Arial, sans-serif;
+  font-size: 37px;
+  font-weight: 900;
+  line-height: 1.03;
+  letter-spacing: -1.4px;
+  margin-bottom: 13px;
+}
+.lobby h1 em {
+  color: #f3d17c;
+  font-style: normal;
+  font-weight: 900;
+}
+.lobby .small-label {
+  color: #becb9b;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  line-height: 1.5;
+}
+.lobby .intro {
+  color: #d4dfc4;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 17px;
+}
+.track-picker {
+  gap: 7px;
+  margin-bottom: 13px;
+}
+.track-choice {
+  background: #ffffff09;
+  border: 1px solid #b7ccaa38;
+  color: #e1e8cc;
+  border-radius: 10px;
+  padding: 10px;
+  flex: 1;
+  text-align: left;
+}
+.track-choice strong {
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: bold;
+  display: block;
+}
+.track-choice span,
+.track-choice small {
+  color: #a2bea9;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.track-choice.active {
+  background: #355c43;
+  border-color: #d9be70;
+  color: #fff3c9;
+  box-shadow: inset 0 -2px 0 #d4b462;
+}
+.track-choice.active span {
+  color: #edcf8f;
+}
+.field {
+  margin: 10px 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.field input,
+.field select,
+.join-row input {
+  background: #0f2c26b3;
+  border: 1px solid #7494777a;
+  color: #f7edd1;
+  min-height: 42px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.field-note {
+  font-size: 10px;
+  color: #b6c9af;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+.advanced {
+  font-size: 10px;
+  color: #b6c9af;
+  margin-top: 10px;
+}
+.advanced summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.advanced[open] {
+  padding-bottom: 5px;
+}
+.primary,
+.secondary {
+  font:
+    700 13px ui-rounded,
+    "Trebuchet MS",
+    sans-serif;
+  min-height: 46px;
+  padding: 13px 12px;
+  border-radius: 10px;
+}
+.primary,
+#play {
+  background: linear-gradient(#ffdf8a, #edbd57);
+  color: #294431;
+  border: 1px solid #ffedb8;
+  box-shadow: 0 4px 0 #9c7737;
+}
+.primary:hover,
+#play:hover {
+  background: #ffe3a0;
+  transform: translateY(-1px);
+}
+.secondary,
+#create {
+  background: #285442;
+  color: #f3e8c9;
+  border: 1px solid #77977a;
+  box-shadow: 0 3px 0 #112b24;
+}
+.secondary:hover,
+#create:hover {
+  background: #37654a;
+}
+#entry-actions .action-row:first-child {
+  flex-direction: row-reverse;
+  margin-top: 16px;
+}
+#play {
+  flex: 1.15;
+}
+.text-button {
+  color: #d0dcc0;
+}
+.connection {
+  font-size: 9px;
+  color: #c4d2b3;
+  margin: 14px 0 8px;
+}
+.preferences {
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+  font-size: 10px;
+  color: #bdcdb6;
+}
+.preferences select {
+  color: var(--ink);
+  background: #183c31;
+  border-color: #6e8a70;
+  font-size: 10px;
+  min-height: 32px;
+  padding: 5px;
+}
+.scene-note {
+  display: none;
+}
+.bottom-bar {
+  padding: 13px 30px;
+  color: #d8e5c9;
+  z-index: 3;
+  font-size: 10px;
+  text-shadow: 0 1px 4px #183f37;
+  pointer-events: none;
+}
+.bottom-bar .phase {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #d0e0be;
+}
+.bottom-bar #help {
+  background: #173c35e6;
+  padding: 9px 14px;
+  border: 1px solid #74947770;
+  border-radius: 10px;
+  margin: 0;
+  color: #edf1d6;
+  font-size: 11px;
+}
+.bottom-bar kbd {
+  font-size: 10px;
+  background: #ffffff14;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+#raft-dock {
+  position: absolute;
+  bottom: 42px;
+  left: 30px;
+  right: 30px;
+  z-index: 2;
+  max-width: 1100px;
+  margin: auto;
+  background: #12392ff2;
+  border: 1px solid #bdd1a64d;
+  padding: 13px 16px;
+  border-radius: 19px;
+  box-shadow: 0 8px 26px #173f392a;
+}
+.garage-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #f4e2ae;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1.2px;
+}
+.garage-heading small {
+  font-size: 9px;
+  font-weight: normal;
+  color: #acbfa8;
+  letter-spacing: 0;
+}
+.raft-cards {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.raft-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  align-content: center;
+  align-items: center;
+  column-gap: 10px;
+  min-width: 0;
+  min-height: 68px;
+  padding: 10px 9px;
+  border: 1px solid #72907955;
+  border-radius: 11px;
+  background: #264f40;
+  color: #dbe6cd;
+  text-align: left;
+  transition:
+    background 0.15s,
+    transform 0.15s;
+}
+.raft-card[aria-pressed="true"] {
+  border-color: #f5ce73;
+  background: #456644;
+  box-shadow: inset 0 -3px 0 #edc66a;
+}
+.raft-card:hover {
+  background: #426342;
+  transform: translateY(-2px);
+}
+.raft-card strong {
+  font-size: 11px;
+  line-height: 1.2;
+}
+.raft-card small {
+  font-size: 9px;
+  color: #ddce9a;
+  margin-top: 5px;
+}
+.raft-icon {
+  grid-row: span 2;
+  display: flex;
+  position: relative;
+  width: 43px;
+  height: 36px;
+  gap: 2px;
+  transform: rotate(-14deg) skew(8deg);
+  filter: drop-shadow(1px 4px 0 #102c2b70);
+}
+.raft-icon i {
+  display: block;
+  background: linear-gradient(90deg, #ad7337, #e5bf78 55%, #c79a4b);
+  width: 8px;
+  border-radius: 3px;
+  border-bottom: 2px solid #9b743b;
+}
+.raft-icon::before,
+.raft-icon::after {
+  content: "";
+  position: absolute;
+  background: #9b7241;
+  height: 3px;
+  left: -3px;
+  right: -3px;
+  top: 5px;
+  border-radius: 3px;
+}
+.raft-icon::after {
+  top: auto;
+  bottom: 5px;
+}
+.raft-1 {
+  border-left: 6px dotted #85caca;
+  border-right: 6px dotted #85caca;
+  width: 49px;
+}
+.raft-2 {
+  outline: 5px dashed #1c282a;
+  border-radius: 5px;
+}
+.raft-3 {
+  border-bottom: 7px solid #3986c2;
+  border-left: 4px solid #246eb1;
+}
+.raft-4 i {
+  background: #be7c70;
+  border-radius: 1px;
+}
+.raft-4 i:nth-child(2n) {
+  background: #69938d;
+}
+.raft-4::before {
+  height: 9px;
+  top: -4px;
+}
+.raft-5 {
+  border: 3px solid #e6b648;
+  border-bottom: 5px solid #b76a3b;
+}
+.raft-5::after {
+  background: #b84e41;
+}
+.raft-caption {
+  position: absolute;
+  right: 38px;
+  top: 112px;
+  width: 255px;
+  pointer-events: none;
+  text-align: right;
+  color: #fff4d4;
+  text-shadow: 0 2px 4px #184b4170;
+}
+.preview-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fdf2cd;
+}
+.raft-caption h2 {
+  font:
+    900 30px "Trebuchet MS",
+    sans-serif;
+  letter-spacing: -1px;
+  margin: 8px 0;
+}
+.raft-caption p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0 0 11px;
+}
+.raft-caption > span:last-child {
+  font-size: 10px;
+  padding: 6px 10px;
+  background: #173f39c7;
+  border: 1px solid #d6e3bb50;
+  border-radius: 20px;
+}
+body.playing .brand {
+  background: none;
+  padding: 0;
+}
+.playing .topbar {
+  padding: 20px 25px;
+}
+.hud {
+  top: 91px;
+  left: 25px;
+  right: auto;
+  gap: 23px;
+  padding: 15px 18px;
+  border: 1px solid #c2d3b14a;
+  background: #173c32f0;
+  box-shadow: 0 6px 25px #123a3130;
+  border-radius: 15px;
+}
+.hud strong {
+  font-size: 25px;
+  color: #ffe7ac;
+  font-weight: 800;
+}
+.hud div > span {
+  color: #b9cbb0;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.hud .icon-button {
+  font-size: 10px;
+  padding: 10px;
+  box-shadow: none;
+}
+.hud progress {
+  accent-color: #edce70;
+}
+.hud .cohesion strong {
+  font-size: 19px;
+}
+.boat-telemetry {
+  position: absolute;
+  right: 25px;
+  top: 93px;
+  width: 205px;
+  padding: 15px;
+  background: #183d34ed;
+  border: 1px solid #bfcead50;
+  border-radius: 15px;
+  font-size: 9px;
+  z-index: 1;
+}
+.journey {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  letter-spacing: 1px;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.journey progress {
+  width: 100%;
+  height: 6px;
+  accent-color: #f4d078;
+}
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 0.6px;
+}
+.balance-row strong {
+  color: #f5d48a;
+}
+.balance-track {
+  position: relative;
+  height: 7px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background: linear-gradient(
+    90deg,
+    #bb7153,
+    #e4cb73 25%,
+    #9abb83 45%,
+    #9abb83 55%,
+    #e4cb73 75%,
+    #bb7153
+  );
+}
+.balance-track i {
+  position: absolute;
+  left: 50%;
+  height: 15px;
+  top: -4px;
+  border-left: 1px solid white;
+}
+.balance-track b {
+  position: absolute;
+  height: 15px;
+  width: 6px;
+  background: #fff6d4;
+  border: 2px solid #183d34;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+}
+#hull-status {
+  color: #c4d1b6;
+  font-size: 9px;
+  line-height: 1.5;
+}
+.gas-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.gas-heading b {
+  display: inline-block;
+  font-size: 24px;
+  color: #f5cf7b;
+}
+.gas-heading span:last-child {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+.rhythm {
+  bottom: 65px;
+  background: #183d34ed;
+  border: 1px solid #c0d1ac55;
+  border-radius: 17px;
+  color: #fff0c9;
+  box-shadow: 0 6px 25px #0e302a20;
+}
+.rhythm small,
+#crew-status {
+  color: #bbcdb6;
+  font-size: 9px;
+}
+.rhythm #beat-label {
+  font-size: 16px;
+  color: #f8d781;
+}
+.beat-rail {
+  height: 13px;
+  margin: 14px 0;
+  background: #51745a;
+}
+.beat-rail span {
+  height: 17px;
+  width: 17px;
+  top: -2px;
+  background: #f7d784;
+  border-color: #fff4c9;
+}
+.beat-rail b {
+  color: #ffecb0;
+  border-color: #e7cd83;
+  height: 29px;
+  top: -8px;
+}
+.center-card {
+  background: #163d34f7;
+  color: #f4ebce;
+  border: 1px solid #bbd2aa6e;
+  backdrop-filter: blur(8px);
+}
+.center-card h2 {
+  font-family: "Trebuchet MS", sans-serif;
+  font-weight: bold;
+  color: #f4d388;
+}
+.center-card #countdown-number {
+  font:
+    900 88px "Trebuchet MS",
+    sans-serif;
+  color: #f6d078;
+}
+.results th,
+.results td {
+  border-color: #a1c19336;
+}
+.results pre {
+  background: #0b2924;
+  padding: 10px;
+  border-radius: 9px;
+}
+.debug-panel {
+  background: #163d34f7;
+  border-color: #8caa7c70;
+  backdrop-filter: blur(10px);
+}
+.debug-panel p,
+.debug-panel small {
+  color: #bcceb4;
+}
+.debug-panel select {
+  color: #edf0d5;
+  border-color: #789b7a;
+  background: #133329;
+}
+.metrics {
+  background: #315841;
+  color: #f5ddb0;
+}
+.toast {
+  background: #f5d88d;
+  color: #264334;
+  border: 1px solid #fff1c3;
+  border-radius: 14px;
+  bottom: 220px;
+  font-weight: 700;
+  font-size: 12px;
+}
+.error {
+  background: #462e21;
+  color: #ffedc7;
+}
+.players li {
+  border-color: #aac0963d;
+}
+.players li strong {
+  font-size: 10px;
+}
+.room-label strong {
+  color: #f6d585;
+}
+.touch-controls {
+  bottom: 60px;
+}
+.touch-controls button {
+  background: #153b32eb;
+  color: #f6e8bc;
+  border: 1px solid #d7d7a958;
+  box-shadow: 0 3px 0 #0c292466;
+  border-radius: 12px;
+  font-size: 23px;
+}
+.touch-controls button.pressed {
+  background: #f1cf74;
+  color: #214333;
+}
+.dpad {
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(2, 48px);
+  gap: 4px;
+}
+.dpad button {
+  width: 48px;
+  height: 48px;
+}
+.dpad button:first-child {
+  grid-column: 2;
+}
+.dpad button:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
+}
+.dpad button:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.dpad button:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+}
+.gas-controls {
+  display: grid;
+  gap: 4px;
+}
+.gas-controls > div {
+  display: flex;
+  gap: 4px;
+}
+.touch-controls .fart-button {
+  width: 100px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #28442e;
+  background: #f3d17a;
+}
+.reach-controls {
+  display: grid;
+  gap: 4px;
+}
+.reach-controls button {
+  font-size: 14px;
+}
+@media (min-width: 901px) and (max-width: 1150px) {
+  .raft-card {
+    grid-template-columns: 35px 1fr;
+    gap: 6px;
+  }
+  .raft-icon {
+    transform: scale(0.75) rotate(-14deg);
+    transform-origin: left center;
+    width: 35px;
+  }
+  .raft-card strong {
+    font-size: 10px;
+  }
+  .boat-telemetry {
+    width: 175px;
+  }
+}
+@media (max-width: 900px) {
+  .topbar {
+    padding: 20px;
+  }
+  .brand {
+    font-size: 26px;
+  }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    font-size: 38px;
+  }
+  .brand-sub {
+    font-size: 9px;
+  }
+  .location {
+    font-size: 10px;
+    padding: 9px 10px;
+  }
+  .lobby {
+    background: linear-gradient(0deg, #12372f66, transparent 55%);
+  }
+  .lobby-copy {
+    left: 18px;
+    right: 18px;
+    width: auto;
+    top: auto;
+    bottom: 163px;
+    max-height: 310px;
+    padding: 17px 20px;
+    border-radius: 18px;
+    background: #153c34f2;
+  }
+  .lobby h1 {
+    font-size: 29px;
+    line-height: 1.03;
+    margin-bottom: 9px;
+  }
+  .lobby h1 br {
+    display: none;
+  }
+  .lobby h1 em {
+    margin-left: 5px;
+  }
+  .lobby .intro {
+    font-size: 11px;
+    max-width: none;
+    margin-bottom: 12px;
+  }
+  .lobby .small-label {
+    font-size: 8px;
+    margin-bottom: 8px;
+  }
+  .lobby #entry-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
+  }
+  .track-picker {
+    margin: 0;
+  }
+  .track-choice {
+    padding: 8px;
+  }
+  .track-choice strong {
+    font-size: 14px;
+  }
+  .lobby .advanced {
+    grid-column: 1/-1;
+    margin-top: 5px;
+  }
+  .lobby .field {
+    margin-top: 5px;
+  }
+  .lobby #entry-fields > .field {
+    margin: 0;
+  }
+  .lobby #animal-select {
+    padding: 8px;
+    min-height: 37px;
+  }
+  #ability {
+    margin-bottom: 8px;
+  }
+  #raft-dock {
+    left: 18px;
+    right: 18px;
+    bottom: 36px;
+    padding: 11px 12px;
+    border-radius: 15px;
+  }
+  .garage-heading {
+    font-size: 9px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .garage-heading small {
+    font-size: 8px;
+  }
+  .raft-cards {
+    display: flex;
+    overflow: auto;
+    scrollbar-width: thin;
+    padding-bottom: 3px;
+    scrollbar-color: #678665 transparent;
+  }
+  .raft-card {
+    flex: 0 0 106px;
+    min-height: 65px;
+    padding: 8px;
+    grid-template-columns: 31px 1fr;
+    gap: 4px;
+  }
+  .raft-icon {
+    transform: scale(0.65) rotate(-14deg);
+    transform-origin: left center;
+    width: 35px;
+  }
+  .raft-card strong {
+    font-size: 10px;
+  }
+  .raft-card small {
+    font-size: 8px;
+  }
+  .raft-caption {
+    top: 91px;
+    right: 20px;
+    width: 225px;
+  }
+  .raft-caption h2 {
+    font-size: 23px;
+    margin: 6px 0;
+  }
+  .raft-caption p {
+    font-size: 10px;
+    line-height: 1.4;
+    margin-bottom: 7px;
+  }
+  .preview-tag {
+    font-size: 7px;
+  }
+  .raft-caption > span:last-child {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+  .bottom-bar {
+    padding: 10px 20px;
+    font-size: 9px;
+  }
+  .bottom-bar > span:first-child {
+    font-size: 9px;
+  }
+  .playing .topbar {
+    padding: 16px;
+  }
+  .playing .brand {
+    font-size: 24px;
+  }
+  .hud {
+    top: 77px;
+    left: 16px;
+    right: 16px;
+    padding: 11px 13px;
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+  .hud strong {
+    font-size: 23px;
+  }
+  .hud div > span {
+    font-size: 7px;
+  }
+  .hud .cohesion strong {
+    font-size: 16px;
+  }
+  .hud > button {
+    min-height: 40px;
+    max-width: 70px;
+    padding: 7px;
+  }
+  .hud progress {
+    width: 58px;
+  }
+  .boat-telemetry {
+    top: 163px;
+    right: 16px;
+    width: 167px;
+    padding: 11px;
+  }
+  .journey {
+    margin-bottom: 10px;
+    font-size: 8px;
+  }
+  .balance-row {
+    font-size: 8px;
+  }
+  #hull-status {
+    font-size: 8px;
+  }
+  .gas-heading {
+    font-size: 8px;
+  }
+  .rhythm {
+    bottom: 145px;
+    padding: 10px 14px;
+    width: 245px;
+  }
+  .rhythm small {
+    font-size: 9px;
+  }
+  #crew-status {
+    font-size: 8px;
+    margin-top: 9px;
+  }
+  .touch-controls {
+    bottom: 40px;
+    left: 16px;
+    right: 16px;
+  }
+  .toast {
+    bottom: 300px;
+  }
+}
+@media (max-width: 480px) {
+  .location {
+    display: none;
+  }
+  .lobby-copy {
+    max-height: 280px;
+    padding: 15px;
+    bottom: 158px;
+  }
+  .lobby h1 {
+    font-size: 24px;
+  }
+  .lobby .small-label {
+    font-size: 7px;
+  }
+  .lobby .intro {
+    font-size: 10px;
+    margin-bottom: 9px;
+  }
+  .raft-caption {
+    top: 85px;
+    right: 18px;
+    width: 190px;
+  }
+  .raft-caption h2 {
+    font-size: 21px;
+  }
+  .raft-caption p {
+    font-size: 9px;
+  }
+  .raft-cards {
+    gap: 6px;
+  }
+  .garage-heading small {
+    max-width: 130px;
+    text-align: right;
+    line-height: 1.3;
+  }
+  .hud {
+    gap: 8px;
+  }
+  .hud strong {
+    font-size: 20px;
+  }
+  .hud .cohesion strong {
+    font-size: 15px;
+  }
+  .hud > button {
+    font-size: 9px;
+    max-width: 54px;
+  }
+  .hud div > span {
+    letter-spacing: 0.1px;
+    font-size: 6px;
+  }
+  .hud progress {
+    width: 45px;
+  }
+  .boat-telemetry {
+    top: 151px;
+    width: 147px;
+  }
+  .rhythm {
+    bottom: 161px;
+    width: 220px;
+  }
+  .dpad {
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 48px);
+    gap: 2px;
+  }
+  .dpad button {
+    min-width: 44px;
+    width: 44px;
+  }
+  .touch-controls {
+    left: 10px;
+    right: 10px;
+  }
+  .gas-controls > div {
+    gap: 2px;
+  }
+  .gas-controls button {
+    min-width: 44px;
+    width: 44px;
+  }
+  .touch-controls .fart-button {
+    width: 90px;
+  }
+  .reach-controls button {
+    min-width: 44px;
+    width: 44px;
+  }
+  .bottom-bar {
+    padding-left: 18px;
+  }
+}
+@media (pointer: fine) {
+  .rhythm {
+    bottom: 65px;
+  }
+}
+@media (max-height: 620px) {
+  .lobby-copy {
+    top: 83px;
+    bottom: 150px;
+    max-height: none;
+    left: 20px;
+    width: 305px;
+    right: auto;
+  }
+  .lobby h1 {
+    font-size: 26px;
+  }
+  .raft-caption {
+    top: 90px;
+    right: 25px;
+    width: 220px;
+  }
+  #raft-dock {
+    bottom: 32px;
+  }
+  .hud {
+    top: 70px;
+    max-width: 500px;
+  }
+  .boat-telemetry {
+    top: 145px;
+    width: 160px;
+  }
+  .rhythm {
+    bottom: 60px;
+    right: 20px;
+    left: auto;
+    transform: none;
+    width: 230px;
+  }
+  .touch-controls {
+    bottom: 20px;
+  }
+  .playing .rhythm {
+    bottom: 140px;
+  }
+  .center-card {
+    top: 50%;
+    max-height: 85dvh;
+  }
+}
+body.playing .location {
+  background: #163d34ed;
+  color: #f8edcc;
+}
+.toast {
+  top: 185px;
+  bottom: auto;
+}
+@media (max-width: 900px) {
+  .toast {
+    top: 151px;
+    left: 16px;
+    transform: none;
+    max-width: calc(100vw - 203px);
+    min-width: 0;
+    padding: 10px 12px;
+    font-size: 10px;
+    text-align: left;
+  }
+}
+@media (max-width: 480px) {
+  .toast {
+    top: 150px;
+    max-width: calc(100vw - 185px);
+    font-size: 9px;
+  }
+}
+@media (max-width: 600px) {
+  .touch-controls {
+    display: flex;
+  }
+  .rhythm {
+    bottom: 159px;
+  }
+  body.playing #help {
+    display: none;
+  }
+}
+@media (max-width: 480px) and (min-height: 740px) {
+  .lobby-copy {
+    max-height: 240px;
+  }
+}

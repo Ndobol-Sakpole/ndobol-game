@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#173f39" />
+    <title>Ndobol Sesarengan — Susuri sungai, rawat bersama</title>
+    <link rel="icon" href="./assets/logo.webp" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/play.css" />
+    <link rel="stylesheet" href="./css/river.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three.module.min.js",
+          "@shared/": "../../shared/"
+        }
+      }
+    </script>
+    <script src="./runtime-config.js"></script>
+    <script type="module" src="./js/bootstrap.js"></script>
+  </head>
+  <body class="welcome">
+    <main id="game" aria-label="Dunia sungai tiga dimensi">
+      <canvas
+        id="scene"
+        aria-label="Sungai Nusantara dengan getek bambu"
+        tabindex="0"
+      ></canvas>
+    </main>
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Ndobol Sesarengan"
+        ><img
+          src="./assets/logo.webp"
+          alt="Ndobol Sesarengan"
+          width="470"
+          height="244"
+      /></a>
+      <div class="location">
+        <span class="location-dot"></span
+        ><span id="location-name">Selokan Mataram</span
+        ><span class="location-region" id="location-region">Yogyakarta</span>
+      </div>
+      <div class="top-actions">
+        <button id="wallet-open" class="secondary">
+          ◈ <span id="wallet-label">Connect wallet</span>
+        </button>
+        <button
+          id="debug-toggle"
+          class="icon-button"
+          aria-expanded="false"
+          aria-controls="debug-panel"
+          title="Pengaturan dunia"
+        >
+          ⚙ <span>Pengaturan</span>
+        </button>
+      </div>
+    </header>
+    <section
+      id="title-screen"
+      class="title-screen"
+      aria-labelledby="welcome-title"
+    >
+      <div class="welcome-copy">
+        <img
+          src="./assets/logo.webp"
+          alt="Ndobol Sesarengan"
+          width="470"
+          height="244"
+        />
+        <p class="small-label">PETUALANGAN SUNGAI NUSANTARA</p>
+        <h1 id="welcome-title">Satu getek.<br />Gas sesukamu.</h1>
+        <p>
+          Jelajahi Selokan Mataram dan Kali Progo.<br />Berjalan, cari
+          keseimbangan, lalu lepaskan gas!
+        </p>
+        <button id="enter-game" class="primary" disabled>
+          CONNECT &amp; START <span>→</span>
+        </button>
+        <small>Wallet wajib · Monad Testnet · 1–4 pemain</small>
+      </div>
+      <div class="welcome-hint">100% tenaga alami <span>✦</span> 0% dayung</div>
+    </section>
+    <dialog id="wallet-dialog" aria-labelledby="wallet-title">
+      <div class="panel-heading">
+        <span class="small-label">MONAD · ON-CHAIN</span
+        ><button
+          id="wallet-close"
+          class="icon-button"
+          aria-label="Tutup wallet"
+        >
+          ×
+        </button>
+      </div>
+      <h2 id="wallet-title">Dompet perjalanan</h2>
+      <p>
+        Hubungkan wallet di Monad Testnet dan tanda tangani pesan login. Wallet yang sama menerima reward ronde.
+      </p>
+      <dl class="chain-status">
+        <div>
+          <dt>Wallet</dt>
+          <dd id="wallet-account">Belum terhubung</dd>
+        </div>
+        <div>
+          <dt>Jaringan</dt>
+          <dd id="wallet-network">—</dd>
+        </div>
+        <div>
+          <dt>Reward MON</dt>
+          <dd>1 kg = 0,00001 MON</dd>
+        </div>
+      </dl>
+      <p id="wallet-status" role="status">
+        Pilih Connect untuk meminta akses alamat dari wallet browser.
+      </p>
+      <button id="wallet-connect" class="primary">Connect wallet</button>
+      <button id="wallet-switch" class="secondary" hidden>
+        Pindah ke Monad Testnet
+      </button>
+      <button id="wallet-disconnect" class="text-button" hidden>
+        Lepaskan koneksi aplikasi
+      </button>
+      <p class="field-note"><a href="https://faucet.monad.xyz" target="_blank" rel="noopener noreferrer">Ambil test MON dari faucet ↗</a> · Test MON tidak memiliki nilai uang nyata.</p>
+      <div class="chain-roadmap">
+        <span>01 · Hubungkan alamat</span
+        ><span>02 · Main &amp; simpan hasil</span
+        ><span class="muted">03 · Klaim dari layar hasil</span>
+      </div>
+      <button class="secondary" disabled>
+        Klaim setelah menyelesaikan ronde
+      </button>
+      <small
+        >Pesan login tidak memindahkan MON. Transaksi klaim diminta terpisah setelah ronde selesai.</small
+      >
+    </dialog>
+
+    <section id="lobby" hidden class="lobby" aria-labelledby="lobby-title">
+      <div class="lobby-copy">
+        <p class="small-label" data-i18n="eyebrow">
+          SATU GETEK · EMPAT BIANG KEROK
+        </p>
+        <h1 id="lobby-title" data-i18n="title">
+          Kompak dulu.<br /><em>Gas kemudian.</em>
+        </h1>
+        <p class="intro" data-i18n="intro">
+          Jaga keseimbangan, arahkan kentut, dan bersihkan sungai bersama.
+        </p>
+        <div id="entry-actions">
+          <p class="field-note">Main sendiri? Buat room, tekan Siap lalu Mulai. Slot kosong ditemani bot.</p>
+          <div class="action-row">
+            <button id="create" class="primary" data-i18n="create" disabled>
+              Buat room</button
+            ><button id="play" hidden class="secondary" data-i18n="solo" disabled>
+              Solo + bot
+            </button>
+          </div>
+          <div class="action-row join-row">
+            <input
+              id="room-code"
+              maxlength="6"
+              placeholder="ABC234"
+              aria-label="Kode room / Room code"
+              autocapitalize="characters"
+              autocomplete="off"
+            /><button id="join" class="secondary" data-i18n="join" disabled>
+              Gabung
+            </button>
+          </div>
+        </div>
+        <label class="bot-option"
+          ><input id="solo-bots" type="checkbox" />
+          <span>Temani solo dengan 3 bot</span></label
+        >
+        <div id="entry-fields">
+          <div class="track-picker" role="group" aria-label="Sungai / River">
+            <button
+              data-track="bengawan"
+              class="track-choice active"
+              aria-pressed="true"
+            >
+              <span>01 / YOGYAKARTA</span><strong>Selokan Mataram</strong
+              ><small>3 min</small>
+            </button>
+            <button
+              data-track="mahakam"
+              class="track-choice"
+              aria-pressed="false"
+            >
+              <span>02 / JERAM</span><strong>Kali Progo</strong
+              ><small>4 min</small>
+            </button>
+          </div>
+          <label class="field"
+            ><span data-i18n="name">Nama pemain</span
+            ><input
+              id="player-name"
+              maxlength="24"
+              value="Penjelajah"
+              autocomplete="nickname"
+          /></label>
+          <details class="advanced">
+            <summary>Wallet penerima reward</summary>
+            <label class="field"
+              ><span data-i18n="address">Wallet terverifikasi</span
+              ><input
+                id="player-address" readonly
+                maxlength="42"
+                placeholder="0x…"
+                spellcheck="false"
+                autocomplete="off"
+            /></label>
+            <p class="field-note" data-i18n="guest">
+              Alamat berasal dari wallet dan dikunci selama ronde.
+            </p>
+          </details>
+        </div>
+        <label class="field"
+          ><span data-i18n="companion">Kawan perjalanan</span
+          ><select id="animal-select">
+            <option value="dog">Anjing</option>
+            <option value="cat">Kucing</option>
+            <option value="duck">Bebek</option>
+            <option value="monkey">Monyet</option>
+            <option value="pig">Babi</option>
+            <option value="squirrel">Tupai</option>
+            <option value="crocodile">Buaya</option>
+            <option value="snake">Ular</option>
+            <option value="buffalo">Kerbau</option>
+            <option value="proboscis">Bekantan</option>
+          </select></label
+        >
+        <p id="ability" class="field-note"></p>
+        <div id="room-panel" hidden>
+          <p class="room-label">
+            <span data-i18n="room">Kode room</span>
+            <strong id="room-label"></strong>
+          </p>
+          <ol id="room-players" class="players"></ol>
+          <p class="field-note" data-i18n="botNote">
+            Slot kosong diisi bot saat mulai. Semua pemain harus siap.
+          </p>
+          <div class="action-row">
+            <button id="ready" class="secondary" data-i18n="ready">Siap</button
+            ><button id="start" class="primary" data-i18n="start">Mulai</button>
+          </div>
+          <button id="leave-room" class="text-button" data-i18n="leave">
+            Keluar room
+          </button>
+        </div>
+        <p id="connection" class="connection" role="status">
+          Demo lokal tersedia
+        </p>
+        <div class="preferences">
+          <label
+            ><span data-i18n="language">Bahasa</span>
+            <select id="language">
+              <option value="id">Indonesia</option>
+              <option value="en">English</option>
+            </select></label
+          ><label
+            ><input id="sound" type="checkbox" checked />
+            <span data-i18n="sound">Suara aksi</span></label
+          >
+        </div>
+      </div>
+      <div class="scene-note">
+        <span class="note-line"></span
+        ><span data-i18n="note">Dirakit dari bambu.<br />Dirawat bersama.</span>
+      </div>
+    </section>
+    <section id="raft-dock" hidden aria-label="Garasi getek / Raft garage">
+      <div class="garage-heading">
+        <span data-i18n="garage">PILIH GETEKMU</span
+        ><small data-i18n="freePrototype"
+          >Semua gratis dicoba · harga draft koleksi</small
+        >
+      </div>
+      <div id="raft-cards" class="raft-cards"></div>
+    </section>
+    <aside id="raft-caption" hidden class="raft-caption">
+      <span class="preview-tag" data-i18n="livePreview"
+        >PRATINJAU 3D LANGSUNG</span
+      >
+      <h2 id="raft-name">Bambu polos</h2>
+      <p id="raft-description"></p>
+      <span id="raft-price"></span>
+    </aside>
+    <section id="boat-telemetry" class="boat-telemetry" hidden>
+      <div class="journey">
+        <span data-i18n="journey">PERJALANAN</span
+        ><span id="distance-label"></span
+        ><progress id="journey-progress" max="1" value="0"></progress>
+      </div>
+      <div class="balance-row">
+        <span data-i18n="balance">KESEIMBANGAN</span
+        ><strong id="balance-text">100%</strong>
+      </div>
+      <div class="balance-track"><i></i><b id="balance-dot"></b></div>
+      <p id="hull-status"></p>
+      <div class="gas-heading">
+        <span data-i18n="direction">ARAH DORONGAN</span
+        ><b id="direction-arrow">↑</b><span id="direction-degrees">0°</span>
+      </div>
+    </section>
+    <section class="hud" id="hud" aria-label="Status perjalanan" hidden>
+      <div>
+        <span data-i18n="score">SKOR TIM</span><strong id="score">0000</strong>
+      </div>
+      <div>
+        <span data-i18n="trash">TERANGKUT</span
+        ><strong id="collected">0 kg</strong><small id="trash-count">0 benda</small>
+      </div>
+      <div>
+        <span data-i18n="time">SISA WAKTU</span><strong id="time">03:00</strong>
+      </div>
+      <div class="current-stat">
+        <span>ARUS AIR</span><strong id="current-label">TENANG</strong>
+      </div>
+      <button id="back" class="icon-button" data-i18n="leave">
+        Keluar room
+      </button>
+    </section>
+    <p id="hull-warning" class="hull-warning" role="status" hidden></p>
+    <section id="death-banner" class="death-banner" aria-live="assertive" hidden>
+      <strong id="death-reason"></strong><p>Kru gugur · reward ronde hangus</p>
+    </section>
+    <div id="free-gas" class="free-gas" hidden>
+      <span class="keyboard-hint"
+        >WASD · jalan &nbsp; ← → · putar 360° &nbsp; TAHAN SPASI · gas</span
+      ><span class="touch-hint">Arahkan wajah, lalu tahan tombol GAS.</span>
+      <div class="reward-line"><strong id="reward-estimate">0 MON</strong> · <span>estimasi reward Anda</span></div>
+      <p id="crew-status"></p>
+    </div>
+    <section id="countdown" class="center-card" aria-live="polite" hidden>
+      <p class="small-label" data-i18n="together">BERSIAP MENGALIR</p>
+      <strong id="countdown-number">4</strong>
+      <p id="culture"></p>
+    </section>
+    <section
+      id="results"
+      class="center-card results"
+      aria-labelledby="result-title"
+      hidden
+    >
+      <p class="small-label" data-i18n="roundEnd">PERJALANAN SELESAI</p>
+      <h2 id="result-title" data-i18n="thanks">Sungai berterima kasih.</h2>
+      <p id="result-summary"></p>
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="name">Pemain</th>
+            <th data-i18n="weight">Berat</th>
+            <th data-i18n="personalScore">Skor</th><th>MON</th>
+          </tr>
+        </thead>
+        <tbody id="result-players"></tbody>
+      </table>
+      <p id="result-reward" class="reward-summary"></p>
+      <p id="sign-status" role="status"></p>
+      <details id="signature-details" hidden>
+        <summary data-i18n="proof">Lihat bukti hasil</summary>
+        <pre id="signature-payload"></pre>
+      </details>
+      <button id="claim" class="secondary" disabled>
+        Klaim MON · belum aktif
+      </button>
+      <p id="claim-status" role="status"></p>
+      <div class="action-row">
+        <button id="again" class="primary" data-i18n="again">Main lagi</button
+        ><button id="result-leave" class="secondary" data-i18n="lobby">
+          Lobi
+        </button>
+      </div>
+      <details>
+        <summary data-i18n="leaderboard">10 skor terbaik sungai ini</summary>
+        <ol id="leaderboard"></ol>
+      </details>
+    </section>
+    <aside
+      id="debug-panel"
+      class="debug-panel"
+      hidden
+      aria-label="Pengaturan dunia"
+    >
+      <div class="panel-heading">
+        <strong>Pengaturan dunia</strong
+        ><button
+          id="debug-close"
+          class="icon-button"
+          aria-label="Tutup pengaturan"
+        >
+          ×
+        </button>
+      </div>
+      <div class="metrics">
+        <span><b id="fps">—</b> fps</span
+        ><span><b id="draw-calls">—</b> draw calls</span>
+      </div>
+      <label
+        >Sungai<select id="track-select">
+          <option value="bengawan">Selokan Mataram · Kanal</option>
+          <option value="mahakam">Kali Progo · Jeram</option>
+        </select></label
+      ><label
+        >Kualitas<select id="quality-select">
+          <option value="low">Rendah</option>
+          <option value="medium" selected>Sedang</option>
+          <option value="high">Tinggi</option>
+        </select></label
+      ><label
+        >Kamera<select id="camera-select">
+          <option value="follow">Ikuti getek</option>
+          <option value="orbit">Orbit debug · geser layar</option>
+        </select></label
+      ><label class="check"
+        ><input type="checkbox" id="ambient" /> Suara sungai sintetis</label
+      >
+      <label class="check"
+        ><input type="checkbox" id="action-sound" checked /> Suara kentut &amp;
+        aksi</label
+      >
+      <p id="perf-summary" aria-live="off"></p>
+      <p id="quality-description">Resolusi adaptif · flora sedang</p>
+      <small
+        >Sungai dikunci selama berada dalam room.<br />Orbit: geser untuk putar,
+        gulir untuk zoom.</small
+      >
+    </aside>
+    <div id="toast" role="status" class="toast" hidden></div>
+    <footer class="bottom-bar">
+      <span><span class="leaf-icon">✳</span> Sungai bersih, hati juga.</span>
+      <p id="help">
+        <kbd>WASD</kbd> jalan <i>·</i> <kbd>← →</kbd> arah gas <i>·</i>
+        <kbd>SPASI</kbd> tahan gas <i>·</i> <kbd>Q E</kbd> angkat
+      </p>
+      <span class="phase">PHYSICS PLAYTEST</span>
+    </footer>
+    <div class="touch-controls" id="touch-controls" hidden>
+      <div class="dpad" aria-label="Berjalan / Walk">
+        <button data-key="forward" aria-label="Jalan maju / Walk forward">
+          ↑</button
+        ><button data-key="left" aria-label="Jalan kiri / Walk left">←</button
+        ><button data-key="backward" aria-label="Jalan mundur / Walk back">
+          ↓</button
+        ><button data-key="right" aria-label="Jalan kanan / Walk right">
+          →
+        </button>
+      </div>
+      <div class="gas-controls">
+        <div>
+          <button data-key="turnLeft" aria-label="Arah gas kiri / Turn left">
+            ↶</button
+          ><button
+            data-key="turnRight"
+            aria-label="Arah gas kanan / Turn right"
+          >
+            ↷
+          </button>
+        </div>
+        <button data-key="fart" class="fart-button" data-i18n="fart">
+          KENTUT
+        </button>
+      </div>
+      <div class="reach-controls">
+        <button data-key="reachLeft" aria-label="Angkat kiri / Reach left">
+          Q ↥</button
+        ><button data-key="reachRight" aria-label="Angkat kanan / Reach right">
+          E ↥
+        </button>
+      </div>
+    </div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <noscript>Aktifkan JavaScript untuk menjelajah sungai.</noscript>
+  </body>
+</html>

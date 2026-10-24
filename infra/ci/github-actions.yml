@@ -1,0 +1,55 @@
+name: Validate Ndobol
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build:game
+        env:
+          PUBLIC_API_ORIGIN: https://api.example.test
+      - run: npm run test:load
+        env:
+          LOAD_SECONDS: 10
+      - run: python3 infra/scripts/database.py --database /tmp/ndobol.sqlite --seed
+      - run: docker compose config --quiet
+      - run: docker compose up --build --wait
+      - run: curl --fail http://127.0.0.1:4174/apps/web/index.html && curl --fail http://127.0.0.1:8787/health
+      - if: always()
+        run: docker compose down
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: test-only-ci
+          POSTGRES_DB: ndobol_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash infra/scripts/test-postgres.sh
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:test-only-ci@127.0.0.1:5432/ndobol_test
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+      - run: forge test --root contracts -v
+      - run: node infra/scripts/export-abi.js
+      - run: git diff --exit-code -- shared/abi

@@ -1,0 +1,205 @@
+{
+  "id": "bengawan",
+  "name": "Selokan Mataram",
+  "region": "Yogyakarta",
+  "seed": 104,
+  "width": 12,
+  "palette": {
+    "water": "#796b43",
+    "deep": "#514c30",
+    "grass": "#76854c",
+    "soil": "#7a5e3d",
+    "bamboo": "#55652b",
+    "leaf": "#506d36",
+    "sky": "#d1dac8",
+    "fog": "#c7ceba"
+  },
+  "flora": {
+    "bamboo": 0.6,
+    "coconut": 0.4
+  },
+  "path": [
+    [
+      0,
+      24
+    ],
+    [
+      0,
+      -28
+    ],
+    [
+      1,
+      -85
+    ],
+    [
+      1,
+      -140
+    ],
+    [
+      -1,
+      -205
+    ],
+    [
+      0,
+      -270
+    ],
+    [
+      0,
+      -350
+    ]
+  ],
+  "obstacles": [
+    {
+      "type": "rock",
+      "s": 27,
+      "lateral": -4.8,
+      "radius": 1.1
+    },
+    {
+      "type": "hyacinth",
+      "s": 38,
+      "lateral": 4.8,
+      "radius": 1.1
+    },
+    {
+      "type": "log",
+      "s": 56,
+      "lateral": -2,
+      "radius": 1.1,
+      "sharp": true
+    },
+    {
+      "type": "rock",
+      "s": 91,
+      "lateral": 4,
+      "radius": 1.1
+    },
+    {
+      "type": "hyacinth",
+      "s": 128,
+      "lateral": -4.8,
+      "radius": 1.1
+    },
+    {
+      "type": "log",
+      "s": 175,
+      "lateral": 3,
+      "radius": 1.1,
+      "sharp": true
+    },
+    {
+      "type": "rock",
+      "s": 240,
+      "lateral": -3,
+      "radius": 1.1
+    },
+    {
+      "type": "hyacinth",
+      "s": 295,
+      "lateral": 3,
+      "radius": 1.1
+    }
+  ],
+  "trash": [
+    {
+      "type": "bottle",
+      "s": 18,
+      "lateral": 0
+    },
+    {
+      "type": "bag",
+      "s": 23,
+      "lateral": 1
+    },
+    {
+      "type": "can",
+      "s": 32,
+      "lateral": -1
+    },
+    {
+      "type": "bottle",
+      "s": 49,
+      "lateral": 3
+    },
+    {
+      "type": "bag",
+      "s": 65,
+      "lateral": -4
+    },
+    {
+      "type": "can",
+      "s": 80,
+      "lateral": 2
+    },
+    {
+      "type": "bottle",
+      "s": 110,
+      "lateral": -1
+    },
+    {
+      "type": "bag",
+      "s": 145,
+      "lateral": 2
+    },
+    {
+      "type": "can",
+      "s": 190,
+      "lateral": -2
+    },
+    {
+      "type": "bottle",
+      "s": 225,
+      "lateral": 3
+    },
+    {
+      "type": "can",
+      "s": 275,
+      "lateral": -3
+    },
+    {
+      "type": "bag",
+      "s": 310,
+      "lateral": 0
+    }
+  ],
+  "animals": [
+    {
+      "type": "duck",
+      "s": 22,
+      "lateral": 4
+    },
+    {
+      "type": "duck",
+      "s": 24,
+      "lateral": 4
+    },
+    {
+      "type": "buffalo",
+      "s": 39,
+      "lateral": 13
+    },
+    {
+      "type": "proboscis",
+      "s": 30,
+      "lateral": -13
+    },
+    {
+      "type": "buffalo",
+      "s": 142,
+      "lateral": -13
+    },
+    {
+      "type": "proboscis",
+      "s": 210,
+      "lateral": 13
+    }
+  ],
+  "length": 374.0513169155629,
+  "bank": {
+    "height": 2.1,
+    "variation": 0.15,
+    "slope": 1.2
+  },
+  "rapids": [],
+  "kind": "canal"
+}

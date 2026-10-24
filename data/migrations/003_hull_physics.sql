@@ -1,0 +1,6 @@
+BEGIN IMMEDIATE;
+ALTER TABLE rounds ADD COLUMN raft_id TEXT NOT NULL DEFAULT 'bambu-polos';
+ALTER TABLE rounds ADD COLUMN rules_version INTEGER NOT NULL DEFAULT 2;
+ALTER TABLE rounds ADD COLUMN hull_json TEXT;
+PRAGMA user_version = 3;
+COMMIT;

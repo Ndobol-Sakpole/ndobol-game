@@ -1,0 +1,35 @@
+# One process owns live rooms. Do not horizontally scale this revision.
+services:
+  - type: web
+    name: ndobol-game-api
+    runtime: node
+    plan: free
+    numInstances: 1
+    buildCommand: npm ci --omit=dev --ignore-scripts
+    startCommand: node services/api/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 24.5.0
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_BACKEND
+        value: supabase
+      - key: TRUST_PROXY
+        value: 'true'
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SIGNER_PRIVATE_KEY
+        sync: false
+      - key: REWARD_POOL_ADDRESS
+        sync: false
+      - key: SIGNING_CHAIN_ID
+        value: '10143'
+      - key: REWARD_CLAIMS_ENABLED
+        value: 'false'

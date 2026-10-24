@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-24T05:27:52.664Z",
+  "platform": "darwin arm64",
+  "cpu": "Apple M1",
+  "node": "v24.5.0",
+  "rooms": 20,
+  "clients": 80,
+  "seconds": 20.001388332999998,
+  "tickHz": 30.047914174458526,
+  "maxStepMs": 4.854957999999897,
+  "overruns": 0,
+  "droppedMs": 0,
+  "eventLoopP99Ms": 18.300927,
+  "cpuPercentOneCore": 18.032323256527818,
+  "rssMiB": 180.40625,
+  "receivedMiB": 66.51133346557617,
+  "connected": 80,
+  "errors": []
+}
