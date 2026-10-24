@@ -33,3 +33,11 @@ services:
         value: '10143'
       - key: REWARD_CLAIMS_ENABLED
         value: 'false'
+      - key: REWARD_SPONSOR_ENABLED
+        value: 'false'
+      - key: RELAYER_PRIVATE_KEY
+        sync: false
+      - key: RELAYER_DAILY_BUDGET_MON
+        value: '0.1'
+      - key: RELAYER_MAX_GAS_PRICE_WEI
+        value: '150000000000'

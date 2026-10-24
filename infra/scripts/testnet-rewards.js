@@ -5,7 +5,7 @@ import { monadTestnet } from "viem/chains";
 import { fileURLToPath } from "node:url";
 /** Explicit CLI only. No deployment or payment is performed by dev/build/CI. */
 export async function testnetRewards(action = "check") {
-  if (!["check", "deploy", "fund"].includes(action)) throw new Error("Usage: testnet-rewards.js check|deploy|fund");
+  if (!["check", "deploy", "fund", "fund-relayer"].includes(action)) throw new Error("Usage: testnet-rewards.js check|deploy|fund|fund-relayer");
   const rpc = process.env.MONAD_TESTNET_RPC || "https://testnet-rpc.monad.xyz";
   const chain = monadTestnet, transport = http(rpc, { timeout: 15000 });
   const publicClient = createPublicClient({ chain, transport });
@@ -44,8 +44,23 @@ export async function testnetRewards(action = "check") {
     console.log(`Funding sent: ${hash}`);
     if ((await publicClient.waitForTransactionReceipt({ hash })).status !== "success") throw new Error("FUND_FAILED");
   }
+  if (action === "fund-relayer") {
+    if (!key || !process.env.RELAYER_PRIVATE_KEY) throw new Error("Prepare separate local deployer and relayer keys with testnet:prepare");
+    if (!/^\d+(\.\d{1,18})?$/.test(process.env.FUND_GAS_MON || "")) throw new Error("Set explicit FUND_GAS_MON for the gas wallet");
+    const value = parseEther(process.env.FUND_GAS_MON), relayer = privateKeyToAccount(process.env.RELAYER_PRIVATE_KEY);
+    const account = privateKeyToAccount(key);
+    if (value <= 0n || relayer.address === account.address || relayer.address.toLowerCase() === signer.toLowerCase()) throw new Error("Use a separate relayer and positive FUND_GAS_MON");
+    const wallet = createWalletClient({ account, chain, transport });
+    const hash = await wallet.sendTransaction({ to: relayer.address, value });
+    console.log(`Gas funding sent: ${hash}`);
+    if ((await publicClient.waitForTransactionReceipt({ hash })).status !== "success") throw new Error("GAS_FUND_FAILED");
+  }
   const balance = await publicClient.getBalance({ address: pool });
   console.log(JSON.stringify({ chainId: 10143, pool, owner: deployedOwner, signer: deployedSigner, paused, poolMON: formatEther(balance), funded: balance > 0n, explorer: `https://testnet.monadscan.com/address/${pool}` }, null, 2));
   if (paused || balance === 0n) console.log("Claims are not ready. Fund/unpause the pool before enabling REWARD_CLAIMS_ENABLED on Render.");
+  if (process.env.RELAYER_PRIVATE_KEY) {
+    const relayer = privateKeyToAccount(process.env.RELAYER_PRIVATE_KEY);
+    console.log(JSON.stringify({ relayer: relayer.address, gasMON: formatEther(await publicClient.getBalance({ address: relayer.address })) }));
+  }
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) await testnetRewards(process.argv[2]);

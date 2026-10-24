@@ -15,11 +15,13 @@ test("testnet setup stores separate keys privately, preserves custom owner, and 
   const first = await prepareTestnet(file), contents = await readFile(file, "utf8"), env = parseEnv(contents);
   assert.equal(first.owner, owner);
   assert.notEqual(first.deployer, first.signer);
+  assert.equal(new Set([first.deployer,first.signer,first.relayer]).size,3);
   assert.equal(first.chainId, 10143);
   assert.equal(env.SUPABASE_URL, "https://db.example.test");
   assert.match(contents, /# keep this comment/);
   assert.equal(JSON.stringify(first).includes(env.DEPLOYER_PRIVATE_KEY), false);
   assert.equal(JSON.stringify(first).includes(env.SIGNER_PRIVATE_KEY), false);
+  assert.equal(JSON.stringify(first).includes(env.RELAYER_PRIVATE_KEY), false);
   assert.deepEqual(await prepareTestnet(file), first);
   assert.equal(await readFile(file, "utf8"), contents);
   if (process.platform !== "win32") assert.equal((await stat(file)).mode & 0o777, 0o600);

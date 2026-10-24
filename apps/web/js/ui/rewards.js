@@ -25,7 +25,7 @@ export function createRewardUI() {
   };
   function render() {
     button.disabled = paid || busy || !proof?.claimEnabled || !config?.enabled;
-    button.textContent = paid ? "Reward masuk · gas pemain 0" : blocked === "REWARD_FORFEITED" ? "Reward hangus" : blocked === "NO_REWARD" ? "Belum ada reward" : busy ? "Memproses klaim…" : proof?.claimEnabled && config?.enabled
+    button.textContent = paid ? config?.sponsored ? "Reward masuk · gas pemain 0" : "Reward masuk" : blocked === "REWARD_FORFEITED" ? "Reward hangus" : blocked === "NO_REWARD" ? "Belum ada reward" : busy ? "Memproses klaim…" : proof?.claimEnabled && config?.enabled
       ? client.pending(proof) ? "Periksa transaksi klaim" : `Klaim ${formatMon(proof.message.rewardWei)} MON${config.sponsored ? " · tanpa gas" : ""}`
       : "Klaim MON · belum aktif";
   }

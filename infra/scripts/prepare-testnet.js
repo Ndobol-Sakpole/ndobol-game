@@ -19,14 +19,16 @@ export async function prepareTestnet(file = ".env") {
   }
   const deployerKey = env.DEPLOYER_PRIVATE_KEY || generatePrivateKey();
   const signerKey = env.SIGNER_PRIVATE_KEY || generatePrivateKey();
-  let deployer, signer;
-  try { deployer = privateKeyToAccount(deployerKey); signer = privateKeyToAccount(signerKey); }
+  const relayerKey = env.RELAYER_PRIVATE_KEY || generatePrivateKey();
+  let deployer, signer, relayer;
+  try { deployer = privateKeyToAccount(deployerKey); signer = privateKeyToAccount(signerKey); relayer = privateKeyToAccount(relayerKey); }
   catch { throw new Error("INVALID_LOCAL_PRIVATE_KEY: check the local .env without sharing its contents"); }
+  if (new Set([deployer.address, signer.address, relayer.address]).size !== 3) throw new Error("USE_SEPARATE_DEPLOYER_SIGNER_RELAYER_KEYS");
   const owner = env.CONTRACT_OWNER || deployer.address;
   if (!isAddress(owner) || owner.toLowerCase() === zeroAddress) throw new Error("INVALID_CONTRACT_OWNER");
   if (env.REWARD_SIGNER_ADDRESS && env.REWARD_SIGNER_ADDRESS.toLowerCase() !== signer.address.toLowerCase()) throw new Error("SIGNER_ADDRESS_MISMATCH");
   const updates = {
-    DEPLOYER_PRIVATE_KEY: deployerKey, SIGNER_PRIVATE_KEY: signerKey,
+    DEPLOYER_PRIVATE_KEY: deployerKey, SIGNER_PRIVATE_KEY: signerKey, RELAYER_PRIVATE_KEY: relayerKey,
     CONTRACT_OWNER: owner, REWARD_SIGNER_ADDRESS: signer.address, SIGNING_CHAIN_ID: "10143",
   };
   for (const [name, value] of Object.entries(updates)) {
@@ -35,13 +37,13 @@ export async function prepareTestnet(file = ".env") {
   }
   await writeFile(file, source, { mode: 0o600 });
   await chmod(file, 0o600);
-  return { chainId: 10143, deployer: deployer.address, owner, signer: signer.address };
+  return { chainId: 10143, deployer: deployer.address, owner, signer: signer.address, relayer: relayer.address };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     console.log(JSON.stringify(await prepareTestnet(), null, 2));
-    console.log("Keys saved in local .env only. Fund the deployer with test MON; never commit or share .env.");
+    console.log("Keys saved in local .env only. Fund deployer for deployment, relayer for sponsored gas, and the contract for rewards. Never commit or share .env.");
   } catch (error) {
     console.error(error.message); process.exitCode = 1;
   }
