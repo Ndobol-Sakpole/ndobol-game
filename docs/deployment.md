@@ -16,12 +16,12 @@ Import `render.yaml` as a Blueprint, or update an existing manual Web Service (n
 
 Supply:
 
-- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (legacy service-role JWT).
+- `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (`sb_secret_…`; legacy `SUPABASE_SERVICE_ROLE_KEY` remains supported).
 - `ALLOWED_ORIGINS`: exact Vercel production origin, comma-separated if multiple. No wildcard or path. Add a preview deployment's exact origin only when needed.
 - `SIGNER_PRIVATE_KEY`: dedicated server reward signer; this is **not** the pool's owner/deployer key.
 - `REWARD_POOL_ADDRESS`: deployed pool contract, after step 4.
 
-Default `REWARD_CLAIMS_ENABLED=false`. During initial API deployment, leave both signing key and pool blank together. A signer key without a configured verifier/pool is rejected. The executable checks Supabase connectivity/migration before listening. `/health` must be healthy. Render's `PORT` and `HOST=0.0.0.0` are supported. WSS uses the same public service origin/port, path `/rooms`. No Vercel function hosts sockets.
+Default `REWARD_CLAIMS_ENABLED=false`. During initial API deployment, keep claims disabled and the pool blank. A prepared signer key without a verifier leaves signing disabled while games remain available. Enabling claims without a key and pool is rejected. The executable checks Supabase connectivity/migration before listening. `/health` must be healthy. Render's `PORT` and `HOST=0.0.0.0` are supported. WSS uses the same public service origin/port, path `/rooms`. No Vercel function hosts sockets.
 
 Blueprint uses the free plan as a test scaffold; idle spin-down/cold start and restart interrupt live rooms. For a continuously available playtest, select a suitable always-on plan yourself; this repository does not buy or upgrade a plan. Keep **one instance**: rooms and login tokens are in process memory. Restart/redeploy ends unfinished rounds; completed Supabase data remains. Horizontal scaling requires a separate room routing/state design.
 
@@ -84,3 +84,8 @@ Public repository CI activation: copy `infra/ci/github-actions.yml` to `.github/
 Use **Deploy latest commit** on Render and a new deployment from `main` on Vercel. Rebuilding the old `4724efc` source still has the old failure. Successful packaging does not prove Supabase configuration or on-chain claims are active; verify `/health`, wallet login, a room, and a real claim receipt separately.
 
 References: [Render Node selection](https://render.com/docs/node-version), [Render automatic RENDER variable](https://render.com/docs/environment-variables), [Vercel build configuration](https://vercel.com/docs/project-configuration/vercel-json).
+
+
+Supabase key update: use `SUPABASE_SECRET_KEY=sb_secret_…` on Render and the local .env. The existing `SUPABASE_SERVICE_ROLE_KEY` name is still accepted for legacy installs. New keys are opaque, so the adapter sends them as apikey without a JWT Authorization header. Public `NEXT_PUBLIC_SUPABASE_*` snippets are not consumed by this native frontend. [Supabase API key documentation](https://supabase.com/docs/guides/getting-started/api-keys). Setup walkthrough: [quickstart-rewards.md](quickstart-rewards.md).
+
+Startup compatibility: preparing SIGNER_PRIVATE_KEY before a verifier exists no longer stops the API when claims are disabled; the public signing/enabled flags remain false. Setting REWARD_CLAIMS_ENABLED=true without a signer and pool fails startup. Message and contract interfaces are unchanged.

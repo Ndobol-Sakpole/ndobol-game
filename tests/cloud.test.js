@@ -6,6 +6,7 @@ import { verifyTypedData } from "viem";
 import { createWalletAuth } from "../services/api/wallet-auth.js";
 import { createApiServer } from "../services/api/server.js";
 import { createSupabaseStore } from "../data/supabase-store.js";
+import { createSigner } from "../services/api/signing/index.js";
 import { GAME } from "../shared/game/config.js";
 import { connect, flush, drive } from "./helpers.js";
 import { tracks } from "../services/api/rooms/tracks.js";
@@ -94,10 +95,31 @@ test("Supabase adapter keeps service credentials server-side, awaits RPC and fai
   assert.deepEqual(await store.leaderboard("bengawan"),[]);
   assert.equal(calls[0].url,"https://db.example.test/rest/v1/rpc/ndobol_store");
   assert.equal(calls[0].options.headers.apikey,"server-test-key");
+  assert.equal(calls[0].options.headers.Authorization,"Bearer server-test-key");
   assert.deepEqual(JSON.parse(calls[0].options.body),{operation:"leaderboard",args:{trackId:"bengawan"}});
   assert.throws(()=>store.persistRound({mode:"local"},[]),/ROUND_NOT_AUTHORITATIVE/);
   const broken=createSupabaseStore({url:"https://db.example.test",key:"test",fetcher:async()=>({ok:false,status:503})});
   await assert.rejects(broken.nonce("address"),/DATABASE_RPC_503/);
+});
+
+test("Supabase modern secret key uses apikey without an invalid JWT bearer; publishable key is rejected", async () => {
+  const calls = [];
+  const store = createSupabaseStore({ url: "https://db.example.test", key: "sb_secret_test-only", fetcher: async (_url, options) => {
+    calls.push(options); return { ok: true, json: async () => [] };
+  } });
+  await store.leaderboard("bengawan");
+  assert.equal(calls[0].headers.apikey, "sb_secret_test-only");
+  assert.equal(calls[0].headers.Authorization, undefined);
+  assert.throws(() => createSupabaseStore({ url: "https://db.example.test", key: "sb_publishable_test-only" }), /SUPABASE_SERVER_KEY_REQUIRED/);
+});
+
+test("preparing a signer before deployment keeps games available but cannot enable an unconfigured pool", () => {
+  const signing = { privateKey: generatePrivateKey(), verifyingContract: "", rewardPool: "", claimsEnabled: false, chainId: 10143 };
+  const signer = createSigner({}, signing);
+  assert.equal(signer.enabled, false);
+  assert.deepEqual(signer.rewardConfig, { chainId: 10143, contract: null, enabled: false });
+  assert.throws(() => createSigner({}, { ...signing, claimsEnabled: true }), /claims require a signer key and reward pool/);
+  assert.throws(() => createSigner({}, { ...signing, chainId: 1 }), /Monad chain ID/);
 });
 
 test("async persistence never blocks ticks or reports saved before commit", async t => {

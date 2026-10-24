@@ -36,12 +36,11 @@ export function createSigner(
 ) {
   let account = null;
   if (privateKey) {
-    if (![10143, 143].includes(chainId) || !(isAddress(verifyingContract) || isAddress(rewardPool)))
-      throw new Error(
-        "Signing requires Monad chain ID and a configured result or reward verifier",
-      );
-    account = privateKeyToAccount(privateKey);
+    if (![10143, 143].includes(chainId)) throw new Error("Signing requires a Monad chain ID");
+    // Preparing a key may happen before deploying the verifier. Keep games usable.
+    if (isAddress(verifyingContract) || isAddress(rewardPool)) account = privateKeyToAccount(privateKey);
   }
+  if (claimsEnabled && (!account || !isAddress(rewardPool))) throw new Error("Reward claims require a signer key and reward pool");
   const domain = {
     name: SIGNING_NAME,
     version: SIGNING_VERSION,

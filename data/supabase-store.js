@@ -1,12 +1,16 @@
 import { validateRound } from "./validate-round.js";
 import { GAME } from "../shared/game/config.js";
 /** Server-only PostgREST RPC adapter. Never expose the service-role key in a web build. */
-export function createSupabaseStore({ url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY, fetcher = fetch } = {}) {
+export function createSupabaseStore({ url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY, fetcher = fetch } = {}) {
   if (!url || !key || new URL(url).protocol !== "https:") throw new Error("SUPABASE_CONFIG_REQUIRED");
+  if (key.startsWith("sb_publishable_")) throw new Error("SUPABASE_SERVER_KEY_REQUIRED: use SUPABASE_SECRET_KEY on the API only");
+  const headers = { apikey: key, "Content-Type": "application/json" };
+  // Modern secret keys are opaque, not JWTs. Keep legacy service-role JWT support.
+  if (!key.startsWith("sb_secret_")) headers.Authorization = `Bearer ${key}`;
   const endpoint = new URL("/rest/v1/rpc/ndobol_store", url);
   async function rpc(operation, args) {
     const response = await fetcher(endpoint, { method: "POST", signal: AbortSignal.timeout(8000),
-      headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ operation, args }) });
     if (!response.ok) throw new Error(`DATABASE_RPC_${response.status}`); // no credentials or SQL contents in logs
     return response.json();

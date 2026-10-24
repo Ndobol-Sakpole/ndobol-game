@@ -5,3 +5,5 @@ Fase 2: `load-test.js` menjalankan API lokal sementara +80 klien ws dalam20 room
 
 ## Current revision — 24 October 2026
 testnet-rewards.js check|deploy|fund uses existing viem and compiled RiverRewards artifact, testnet10143 only. Explicit funding amount from FUND_MON. test-postgres.sh validates private RPC against an explicitly supplied disposable TEST_DATABASE_URL.
+
+`npm run supabase:check` loads local .env and checks the Supabase private RPC read-only. Modern secret keys and legacy service-role JWTs are supported. `npm run testnet:rewards -- deploy|fund|check` also loads local .env; only deploy/fund send transactions.

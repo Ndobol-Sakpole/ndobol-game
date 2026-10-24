@@ -135,3 +135,10 @@ Final rerun after harness correction: **95/95 passed** in21.5s; latency test164 
 Node 24.5.0 on the local development machine: `npm test` **100/100 passed**, total 29.0s; `npm run lint` and `npm run build:vercel` passed. Five added deployment checks cover Render API import validation without PUBLIC_API_ORIGIN, Vercel default endpoint and independent override, HTTPS-origin rejection, and Render startup on the assigned port with no web child. Startup smoke received /health=200 and rejected an unknown origin with 403. No real Supabase or blockchain write was made.
 
 The existing 100/150ms injected-RTT WebSocket test recorded 156 valid pose comparisons, maximum divergence 0.019m; two host-delayed deliveries (maximum timer lateness38ms) were excluded under the previously documented harness rule. This is not a new device FPS measurement. A read-only request to the supplied public Render /health timed out after20s before redeployment; cloud readiness remains unverified.
+
+
+### Supabase setup verification — 24 October 2026
+
+The production Supabase project migration was applied successfully in its SQL Editor. The local native-fetch adapter then read both track leaderboards through the deployed private RPC using a modern server secret key; both returned valid empty arrays. This confirms migration and read connectivity, not a completed on-chain claim.
+
+After adding secret-key header compatibility, a non-rotating testnet key preparation command, and disabled-signing startup support: **104/104 JavaScript tests passed**, total20.8s. Lint and Vercel packaging passed. No private key or database credential is included in this record. Testnet deployment/funding/claim receipts remain pending until the deployer receives gas funds.
