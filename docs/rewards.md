@@ -42,14 +42,20 @@ State machine tetap lobby→countdown→running→finished→results. `reason` b
 
 Pool menerima native MON lewat `receive()`. Dana kurang: revert tanpa memakai nonce/claim. Owner dapat pause dan rotasi signer; tidak ada fungsi mint uang atau penarikan dana pool. Reentrancy dijaga. ECDSA memakai OpenZeppelin 5.1.0 yang sudah menjadi dependency kontrak; source diverifikasi dari tag resmi. Ini implementasi dengan tes, belum audit eksternal.
 
-## Aktivasi terpisah (belum dijalankan)
+## Aktivasi untuk salinan proyek sendiri
 
 - Jalankan `forge test --root contracts`.
 - Siapkan environment lokal: CONTRACT_OWNER, DEPLOYER_PRIVATE_KEY, REWARD_SIGNER_ADDRESS (alamat publik dari SIGNER_PRIVATE_KEY).
 - `bash contracts/script/deploy-rewards.sh testnet`; mainnet membutuhkan CONFIRM_MAINNET=1. Deployment tidak mendanai kontrak otomatis.
 - Isi pool secara eksplisit melalui wallet pengelola. Pastikan signer, chain, dan alamat deployment benar. Verifikasi dengan `verify-rewards.sh 10143` beserta env explorer.
 - Set REWARD_POOL_ADDRESS, SIGNING_CHAIN_ID, SIGNER_PRIVATE_KEY; setelah siap set REWARD_CLAIMS_ENABLED=true dan restart API. `/rewards/config` hanya mengeluarkan konfigurasi publik. `.env.example` tidak berisi secret.
-- Belum ada deployment, pengisian pool, atau transfer MON nyata dalam pekerjaan ini. Tanpa konfigurasi, tombol menjelaskan klaim belum aktif; tidak menampilkan saldo palsu.
+- Instalasi baru tetap nonaktif tanpa konfigurasi. Deployment publik proyek ini sudah aktif; jangan menyalin key operator atau menganggap instalasi baru dapat memakai signer pool proyek asli.
+
+## Bukti Monad Testnet — 24 Oktober 2026
+
+RiverRewards aktif di `0x94cb1588221e14f34563eede5401646df3730d4a` pada chain 10143. Pool menerima 0,01 test MON. Ronde server `2d0fb2ab-e144-433c-8209-784a0209312c` (Mataram, input otomatis, hasil tersimpan di Supabase) menghasilkan 59 g dan membayar 0,00000059 test MON ke wallet pemain uji. Receipt sukses dan event cocok. API menolak signature ganda dan simulasi replay kontrak mengembalikan `AlreadyClaimed`.
+
+Hash lengkap dan metadata: [monad-testnet-deployment.json](monad-testnet-deployment.json); tautan explorer dan cara top-up: [README](../README.md#bukti-kesiapan-dan-transaksi-monad-testnet). Gas klaim uji adalah 0,01336914 test MON, lebih besar daripada reward; reward yang diterima tidak sama dengan perubahan bersih saldo wallet. Tidak ada subsidi gas atau mainnet deployment dalam tahap ini.
 
 ## Data dan kompatibilitas
 

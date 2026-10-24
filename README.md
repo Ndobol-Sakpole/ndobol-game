@@ -8,7 +8,7 @@ Sungainya terinspirasi **Selokan Mataram** dan **Kali Progo**. Mataram punya din
 
 Proyek ini open source, dibuat oleh tim **DeEs**. Anda boleh menjalankan, mempelajari, dan mengembangkan kodenya sesuai [lisensi MIT](LICENSE). Ini masih prototipe: belum ada marketplace atau pembelian getek. Semua getek di garasi bebas dicoba.
 
-**Main lewat internet:** [buka Ndobol Sesarengan](https://ndobol-game-teal.vercel.app/apps/web/index.html). Buka dengan browser yang memiliki MetaMask atau wallet EVM lain. Web Vercel, API Render, dan database Supabase sudah tersambung. **Klaim MON belum aktif** sampai kontrak dideploy dan pool diisi; lihat [status dan bukti](#bukti-kesiapan-dan-transaksi-monad-testnet) di bawah.
+**Main lewat internet:** [buka Ndobol Sesarengan](https://ndobol-game-teal.vercel.app/apps/web/index.html). Buka dengan browser yang memiliki MetaMask atau wallet EVM lain. Web Vercel, API Render, dan database Supabase sudah tersambung. **Klaim test MON sudah aktif dan transaksi uji berhasil**; lihat [bukti transaksi](#bukti-kesiapan-dan-transaksi-monad-testnet) di bawah. Jika halaman sudah terbuka sebelum aktivasi, muat ulang lalu login dan mainkan ronde baru.
 
 ## Baca ini sebelum mulai
 
@@ -94,7 +94,9 @@ Alur klaim:
 4. Pemain menekan **Klaim MON**, lalu menyetujui transaksi di wallet.
 5. Kontrak membayar test MON dari pool yang sebelumnya diisi pengelola. UI baru menampilkan status dibayar setelah receipt dan event pembayaran cocok.
 
-Pemain memerlukan sedikit test MON untuk biaya gas klaim. Ambil melalui [faucet Monad](https://faucet.monad.xyz). Klaim yang sama tidak bisa dibayar dua kali. **Repo ini belum menyertakan alamat kontrak live atau pool yang didanai.** Tanpa konfigurasi tersebut, tombol klaim tetap nonaktif; angka estimasi di hasil bukan saldo wallet.
+Pemain memerlukan test MON untuk biaya gas klaim. Ambil melalui [faucet Monad](https://faucet.monad.xyz). Klaim yang sama tidak bisa dibayar dua kali. Server publik proyek ini sudah memakai pool testnet yang didanai. **Jika menjalankan salinan sendiri**, ikuti bagian 4 untuk mengaktifkan reward server Anda; alamat dan key tidak diaktifkan otomatis oleh proses instalasi.
+
+Biaya gas dibayar terpisah dan bisa lebih besar daripada reward. Pada transaksi uji di bawah, reward **0,00000059 test MON** dan gas **0,01336914 test MON**. Jadi saldo total wallet berkurang setelah biaya gas, walaupun reward benar-benar diterima. Nilai reward bukan janji keuntungan bersih.
 
 ## 4. Menyalakan reward di Monad Testnet — untuk pengelola
 
@@ -135,15 +137,21 @@ Jaringan: **Monad Testnet**, chain ID **10143**. Pemeriksaan pada **24 Oktober 2
 | Ronde publik otomatis | Mataram dan Progo mencapai finis; hasil tersimpan. Uji ulang Mataram menerima layar hasil dengan status penyimpanan sukses. [Catatan rinci](docs/cloud-verification-2026-10-24.json). |
 | Pengujian lokal | 104 tes JavaScript, lint, dan build Vercel lulus. |
 
-Status klaim dapat dilihat di [konfigurasi reward publik](https://ndobol-game.onrender.com/rewards/config). Saat catatan ini dibuat, nilainya `contract:null` dan `enabled:false`.
+Status klaim dapat dilihat di [konfigurasi reward publik](https://ndobol-game.onrender.com/rewards/config): `chainId:10143`, alamat pool di bawah, dan `enabled:true`. API health juga mengembalikan `signing:true`.
 
-| Bukti on-chain | Status |
-| --- | --- |
-| Deploy RiverRewards | Menunggu dana gas pada wallet deployer; belum ada receipt. |
-| Pengisian pool MON | Menunggu alamat kontrak hasil deploy. |
-| Klaim reward MON | Menunggu kontrak, pool, dan ronde server yang memenuhi syarat. |
+Kontrak RiverRewards: [`0x94cb1588221e14f34563eede5401646df3730d4a`](https://testnet.monadscan.com/address/0x94cb1588221e14f34563eede5401646df3730d4a).
 
-Tautan explorer dan hash transaksi dicatat setelah receipt sukses. Status server `enabled:true` atau signature saja tidak membuktikan bahwa MON sudah diterima. Langkah praktis: [deploy dan isi pool](docs/quickstart-rewards.md); catatan pengujian: [docs/perf.md](docs/perf.md).
+| Bukti on-chain | Hasil terkonfirmasi | Transaksi |
+| --- | --- | --- |
+| Deploy RiverRewards | Sukses, blok 73792492; bytecode, owner, dan signer cocok | [0x7665a0ad…4ba452a](https://testnet.monadscan.com/tx/0x7665a0adcf4d08001a9cf04d129a1785ecda4383e10cd610711cc497f4ba452a) |
+| Pengisian pool | Sukses, **0,01 test MON**, blok 73792560 | [0x49cf62aa…1772fb99](https://testnet.monadscan.com/tx/0x49cf62aa680c4a637e12d3506c1b8b55d2e24e4315c998000f0424f71772fb99) |
+| Klaim reward | Sukses, **59 gram → 0,00000059 test MON**, blok 73792849; event `RewardClaimed` cocok | [0xaac876c9…a71a2768](https://testnet.monadscan.com/tx/0xaac876c9dfd8788b11236f4a78ddc1f935cba233995b783622707223a71a2768) |
+
+Klaim uji memakai wallet deployer `0x97e495Ba652eBDAFA41E6611053A61e41c4813f3` sebagai akun pemain uji. Ronde berjalan melalui input ke server Render dan hasilnya tersimpan di Supabase; pembayaran dikirim melalui CLI menggunakan bukti server yang sah. Ini bukan klaim dari wallet pribadi pemain lain. Penandatanganan ganda ditolak HTTP 409 dan simulasi klaim ulang ditolak `AlreadyClaimed`.
+
+Saldo pool sesudah klaim uji: **0,00999941 test MON** pada 24 Oktober 2026 pukul 17:42 WIB; saldo selanjutnya berubah sesuai klaim/top-up. Hash lengkap, nominal wei, dan receipt ada di [rekaman deployment](docs/monad-testnet-deployment.json). Status `enabled:true` saja tidak membuktikan pembayaran; tabel di atas memakai receipt sukses dan event on-chain.
+
+Untuk **isi ulang pool proyek ini**, pilih Monad Testnet di MetaMask → Kirim/Send → tempel **alamat kontrak RiverRewards di atas** → isi jumlah test MON → periksa alamat/jaringan lalu konfirmasi. Tidak perlu deploy ulang. Pool tidak menyediakan penarikan oleh owner, jadi masukkan dana demo secukupnya. Panduan salinan proyek sendiri: [deploy dan isi pool](docs/quickstart-rewards.md); catatan uji: [docs/perf.md](docs/perf.md).
 
 ## 5. Pasang di internet: Vercel + Render + Supabase
 

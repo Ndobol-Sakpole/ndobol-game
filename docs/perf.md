@@ -154,3 +154,11 @@ The first CLI observer timed out before observing the final snapshots; the datab
 [Public verification record](cloud-verification-2026-10-24.json) contains round IDs and sanitized result fields. Initial leaderboard counts may grow as people play. The sign-disabled UI copy now covers both contract and signer setup; lint and Vercel packaging passed after this text change. No new performance/FPS claim or remote CI result is implied.
 
 Monad Testnet deployer balance remained zero at the check. `/rewards/config` returned `contract:null, enabled:false`; no deployment, funding, or claim transaction was broadcast. On-chain receipt evidence remains pending.
+
+### Confirmed Monad Testnet deployment and claim — 24 October 2026, 17:42 WIB
+
+After the operator funded the dedicated deployer with 1.5 test MON, RiverRewards deployed successfully at `0x94cb1588221e14f34563eede5401646df3730d4a`. Runtime bytecode, owner, signer, rate, chain 10143, and unpaused state were checked. A separate funding transaction deposited 0.01 test MON. Render was redeployed with the verified pool address and claims enabled; `/health` now reports signing:true and `/rewards/config` reports enabled:true.
+
+The repeat live Mataram round above was signed through the deployed `/rounds/sign` endpoint, with no supplied client score/weight. The EIP-712 signature matched the on-chain signer and domain. A CLI-controlled test player then sent the claim transaction: success at block 73792849, event RewardClaimed for exactly 59 g / 590000000000 wei (0.00000059 test MON). The pool balance became 0.00999941 test MON. A duplicate signing request returned 409 ALREADY_SIGNED; a replay eth_call reverted AlreadyClaimed without sending another transaction.
+
+All three hashes, blocks, public identities, and balance observations are in [the transaction record](monad-testnet-deployment.json). The explorer also displayed Success and the internal MON transfer. The claim consumed 131070 gas at 102 gwei, costing 0.01336914 test MON; the wallet's net balance declined because gas exceeded the small reward. This is a testnet execution proof, not an assertion of profitable economics, a real MetaMask UI test, source verification on an explorer, or a security audit. Earlier pending notes above describe checks before operator funding.

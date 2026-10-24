@@ -1,0 +1,49 @@
+{
+  "verifiedAt": "2026-10-24T10:42:07.475Z",
+  "chainId": 10143,
+  "network": "Monad Testnet",
+  "rpc": "https://testnet-rpc.monad.xyz",
+  "contract": "0x94cb1588221e14f34563eede5401646df3730d4a",
+  "owner": "0x8B4502AE90C985bd42e807dc7EDa8EAb37874250",
+  "signer": "0xf2E91197bFE16c146986fC89c08778dADE80b307",
+  "runtimeCodeHash": "0x6aad01290ea9dc62ed2065c6ba8ed823dea07c31641af390c90233c546559e6f",
+  "rateWeiPerGram": "10000000000",
+  "deployment": {
+    "hash": "0x7665a0adcf4d08001a9cf04d129a1785ecda4383e10cd610711cc497f4ba452a",
+    "blockNumber": "73792492",
+    "status": "success"
+  },
+  "funding": {
+    "hash": "0x49cf62aa680c4a637e12d3506c1b8b55d2e24e4315c998000f0424f71772fb99",
+    "blockNumber": "73792560",
+    "status": "success",
+    "amountMON": "0.01"
+  },
+  "claim": {
+    "hash": "0xaac876c9dfd8788b11236f4a78ddc1f935cba233995b783622707223a71a2768",
+    "blockNumber": "73792849",
+    "status": "success",
+    "roundId": "2d0fb2ab-e144-433c-8209-784a0209312c",
+    "signedRoundId": "0x52ba4e2da384e1e9a86652f87bd636f7b295a079034023b4fe38acb8f19fc5cc",
+    "player": "0x97e495Ba652eBDAFA41E6611053A61e41c4813f3",
+    "weightGrams": "59",
+    "amountWei": "590000000000",
+    "amountMON": "0.00000059",
+    "nonce": "0",
+    "gasUsed": "131070",
+    "effectiveGasPrice": "102000000000",
+    "event": "RewardClaimed",
+    "automatedTestRound": true,
+    "server": "https://ndobol-game.onrender.com"
+  },
+  "checks": {
+    "typedSignatureMatchesContractSigner": true,
+    "storedServerResult": true,
+    "duplicateSigningRejected409": true,
+    "replaySimulationRejectedAlreadyClaimed": true
+  },
+  "poolMONBeforeClaim": "0.01",
+  "poolMONAfterClaim": "0.00999941",
+  "playerMONBeforeClaim": "1.390969628",
+  "playerMONAfterClaim": "1.377601078"
+}

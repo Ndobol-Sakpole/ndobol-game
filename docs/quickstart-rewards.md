@@ -2,6 +2,8 @@
 
 Panduan ini memakai **Monad Testnet (chain ID 10143)**. Web berada di Vercel, API/room di Render, dan hasil ronde di Supabase. Tidak ada transaksi mainnet.
 
+**Untuk pemain server publik proyek ini:** deployment, database, dan pool sudah aktif. Cukup buka [game](https://ndobol-game-teal.vercel.app/apps/web/index.html), muat ulang jika sebelumnya sudah terbuka, connect wallet, lalu mainkan ronde baru. Bagian di bawah ditujukan untuk pengelola yang memasang salinan sendiri. Bukti transaksi asli tersedia di [README](../README.md#bukti-kesiapan-dan-transaksi-monad-testnet).
+
 ## 1. Siapkan database Supabase
 
 1. Buka project Anda di dashboard Supabase.

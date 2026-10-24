@@ -14,3 +14,5 @@ Kontrak baru yang membayar native MON dari pool pengelola dengan RoundReward EIP
 
 ## Current revision — 24 October 2026
 Deployment convenience: node --env-file=.env infra/scripts/testnet-rewards.js deploy|fund|check from repo root (compile first). Verifies chain/runtime code/owner/signer/rate and receipts; no automatic activation. See docs/deployment.md.
+
+RiverRewards live testnet deployment (24 October 2026): `0x94cb1588221e14f34563eede5401646df3730d4a`, chain 10143. Deployment, 0.01 test MON funding, and a successful 59 g reward claim are recorded in [docs/monad-testnet-deployment.json](../docs/monad-testnet-deployment.json). Runtime bytecode matches the local compiled artifact. This does not claim explorer source verification or an external security audit; the three Phase 1 stub contracts remain unchanged.
