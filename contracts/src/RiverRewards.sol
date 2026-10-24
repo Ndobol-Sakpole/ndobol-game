@@ -76,9 +76,18 @@ contract RiverRewards is Ownable {
     }
 
     function claim(RoundReward calldata r, bytes calldata signature) external {
+        if (msg.sender != r.player) revert WrongPlayer();
+        _claim(r, signature);
+    }
+
+    /// @notice Anyone may pay the gas; the signed player always receives the full reward.
+    function claimFor(RoundReward calldata r, bytes calldata signature) external {
+        _claim(r, signature);
+    }
+
+    function _claim(RoundReward calldata r, bytes calldata signature) private {
         if (entered != 0) revert Reentrant();
         if (paused) revert Paused();
-        if (msg.sender != r.player) revert WrongPlayer();
         if (block.timestamp > r.deadline) revert Expired();
         if (
             r.roundId == bytes32(0) || r.trackId == bytes32(0) || r.weightGrams == 0 || r.weightGrams > MAX_WEIGHT_GRAMS

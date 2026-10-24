@@ -114,6 +114,30 @@ contract RewardsTest {
         require(player.balance == 0.0003 ether);
     }
 
+    function testSponsorPaysGasButCannotReceiveOrRedirectReward() public {
+        RiverRewards.RoundReward memory r = result();
+        bytes memory sig = sign(r);
+        address sponsor = address(0xCAFE);
+        vm.prank(sponsor);
+        pool.claimFor(r, sig);
+        require(player.balance == r.rewardWei && sponsor.balance == 0);
+        vm.expectRevert(RiverRewards.AlreadyClaimed.selector);
+        vm.prank(player);
+        pool.claim(r, sig);
+        r.player = sponsor;
+        vm.expectRevert(RiverRewards.InvalidSigner.selector);
+        pool.claimFor(r, sig);
+    }
+
+    function testSponsorCannotReplayDirectClaim() public {
+        RiverRewards.RoundReward memory r = result();
+        bytes memory sig = sign(r);
+        vm.prank(player);
+        pool.claim(r, sig);
+        vm.expectRevert(RiverRewards.AlreadyClaimed.selector);
+        pool.claimFor(r, sig);
+    }
+
     function testCannotStealAnotherPlayersProof() public {
         RiverRewards.RoundReward memory r = result();
         bytes memory sig = sign(r);

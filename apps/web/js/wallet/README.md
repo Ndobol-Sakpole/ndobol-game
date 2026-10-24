@@ -8,3 +8,5 @@ claim.js:createClaimClient({provider,storage,now}) → pending(proof),submit(pro
 
 ## Current revision — 24 October 2026
 wallet/auth.js adds EIP-191 personal_sign login (separate from adapter connect and claim transactions). walletSession/clearWalletSession use per-tab sessionStorage; authenticateWallet enforces10143 and rechecks identity after signing. Server verifies ownership before rooms. Requires injected EOA; WalletConnect/EIP1271 are not implemented.
+
+`sponsored-claim.js:createSponsoredClaimClient` exposes pending/submit/receipt/retryFailed. With sponsored configuration it posts only roundId and the slot token, verifies matching receipt/event and never calls eth_sendTransaction. There is no silent fallback to player-paid gas.

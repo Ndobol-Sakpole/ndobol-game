@@ -14,3 +14,5 @@ HUD menampilkan gram/kg, jumlah benda dan estimasi MON pribadi. Fatal banner/res
 Public flow requires wallet: createWalletUI.ensure() connects/switches testnet/verifies login, then createUI.enter() opens create/join lobby. No guest/solo bypass button; create+ready+start supports one human with bots. Result signing waits for asynchronous persistence.
 
 SIGNING_DISABLED explains that reward setup includes both the pool contract and signer configuration. A prepared signer key alone does not activate claims. No public UI interface changed.
+
+Sponsored rewards: the claim button labels gas as operator-paid. Receipt polling confirms payment; failures/budget limits never trigger a player-paid transaction. A matching success shows a MonadScan link and disables duplicate claiming.

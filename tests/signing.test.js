@@ -193,7 +193,7 @@ test("migration preserves Phase 1 archives, applies once, and foreign keys stay 
   assert.deepEqual(store.db.prepare("PRAGMA foreign_key_check").all(), []);
   store.close();
   store = createStore(file);
-  assert.equal(store.db.prepare("PRAGMA user_version").get().user_version, 5);
+  assert.equal(store.db.prepare("PRAGMA user_version").get().user_version, 6);
   store.close();
 });
 test("leaderboard returns 10 best scores independently per track", (t) => {

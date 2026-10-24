@@ -125,6 +125,71 @@
   },
   {
     "type": "function",
+    "name": "claimFor",
+    "inputs": [
+      {
+        "name": "r",
+        "type": "tuple",
+        "internalType": "struct RiverRewards.RoundReward",
+        "components": [
+          {
+            "name": "roundId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "player",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "trackId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "score",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "trash",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "weightGrams",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "rewardWei",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "nonce",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "signature",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "claimed",
     "inputs": [
       {

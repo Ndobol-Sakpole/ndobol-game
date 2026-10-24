@@ -14,3 +14,5 @@ Migrasi004 mendukung capsized/sunk serta round_players.weight_grams,reward_wei,p
 
 ## Current revision — 24 October 2026
 Production adapter: createSupabaseStore in supabase-store.js, native fetch to private RPC. Apply supabase/001_game.sql separately. SQLite stays default locally. validate-round.js is shared evidence validation. See supabase/README.md.
+
+Migration006 / Supabase002 add a private durable sponsored_claims outbox with pre-broadcast raw transaction/hash, terminal receipt and conservative daily gas reservations. relayGet/relayPending/relayReserve/relayUpdate are server-only.

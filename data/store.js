@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { validateRound } from "./validate-round.js";
 import { GAME } from "../shared/game/config.js";
+import { sqliteRelayStore } from "./relay-store.js";
 /** Synchronous, short SQLite transactions. The API owns this connection. */
 export function createStore(filename = ":memory:") {
   if (filename !== ":memory:")
@@ -92,6 +93,7 @@ export function createStore(filename = ":memory:") {
     });
   }
   return {
+    ...sqliteRelayStore(db),
     db,
     persistRound,
     evidence(roundId, sessionId, hash) {

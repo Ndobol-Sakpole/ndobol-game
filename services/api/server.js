@@ -7,17 +7,20 @@ import { attachRooms } from "./rooms.js";
 import { createStore } from "../../data/store.js";
 import { createSigner, ApiError } from "./signing/index.js";
 import { GAME } from "../../shared/game/config.js";
+import { createSponsor } from "./signing/sponsor.js";
 export function createApiServer({
   database = ":memory:",
   persistence,
   walletRequired = true,
   signing = {},
+  sponsoring = {},
   roomOptions = {},
 } = {}) {
   const allowedOrigins = roomOptions.allowedOrigins || ["http://127.0.0.1:4174", "http://localhost:4174"];
   const auth = createWalletAuth();
   const store = persistence || createStore(database),
     signer = createSigner(store, signing);
+  const sponsor = createSponsor(store, signer, sponsoring);
   const server = http.createServer(async (req, res) => {
     const origin = req.headers.origin;
     const cors = origin && allowedOrigins.includes(origin) ? { "Access-Control-Allow-Origin": origin, "Vary": "Origin" } : {};
@@ -49,7 +52,7 @@ export function createApiServer({
           tickHz: GAME.tickHz,
         });
       if (req.method === "GET" && route === "/rewards/config")
-        return reply(200, signer.rewardConfig);
+        return reply(200, { ...signer.rewardConfig, sponsored: sponsor.enabled, relayer: sponsor.address });
       if (req.method === "GET" && route === "/leaderboard") {
         const track = url.searchParams.get("track");
         if (!["bengawan", "mahakam"].includes(track))
@@ -61,7 +64,7 @@ export function createApiServer({
         if (!id || id.length > 64) throw new ApiError(400, "INVALID_ROUND");
         return reply(200, await signer.get(id, token));
       }
-      if (req.method === "POST" && ["/rounds/sign", "/auth/challenge", "/auth/verify"].includes(route)) {
+      if (req.method === "POST" && ["/rounds/sign", "/rounds/claim", "/auth/challenge", "/auth/verify"].includes(route)) {
         let data = "",
           size = 0;
         for await (const chunk of req) {
@@ -81,6 +84,12 @@ export function createApiServer({
           const ip = process.env.TRUST_PROXY === "true" ? (req.headers["x-forwarded-for"]?.split(",").at(-1)?.trim() || req.socket.remoteAddress) : req.socket.remoteAddress;
           if (route === "/auth/challenge") return reply(200, auth.challenge(body.address, origin, ip));
           return reply(200, await auth.verify(body.id, body.signature, origin, ip));
+        }
+        if (route === "/rounds/claim") {
+          if (!body || Array.isArray(body) || Object.keys(body).length !== 1 ||
+              typeof body.roundId !== "string" || !body.roundId || body.roundId.length > 64)
+            throw new ApiError(400, "INVALID_REQUEST");
+          return reply(200, await sponsor.claim(body.roundId, token));
         }
         if (
           !body ||

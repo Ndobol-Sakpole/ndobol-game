@@ -11,3 +11,5 @@ Docker: `docker compose up --build --wait` builds Node24 Alpine images, runs non
 CI template: infra/ci/github-actions.yml runs lint, unit/integration/signing/latency/deployment tests, 20-room load smoke, SQLite/Postgres checks, Compose health and Foundry tests. It must be activated with GitHub workflow permission. `npm run test:load` runs 20 rooms/80 sockets for 20s; LOAD_SECONDS and PERF_OUTPUT configure the run. Records: docs/perf.md.
 
 There are no changes to frontend module interfaces. Build and runtime entry selection are documented in docs/deployment.md. No cloud resource purchases or chain transactions occur during build/test.
+
+Gas sponsorship uses RELAYER_PRIVATE_KEY only on the API and requires Supabase002. REWARD_SPONSOR_ENABLED defaults false; enabling it requires a dedicated funded testnet sender. No relayer secrets are copied by the web build. See docs/sponsored-claims.md.

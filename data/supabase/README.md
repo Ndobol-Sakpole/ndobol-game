@@ -9,3 +9,5 @@ No live Supabase project is created by this migration. Local CI verifies the mig
 
 
 Modern `sb_secret_…` keys are sent only in the `apikey` header; they are not JWT bearer tokens. `SUPABASE_SERVICE_ROLE_KEY` remains a legacy fallback only when `SUPABASE_SECRET_KEY` is blank. Publishable keys are explicitly rejected by this server adapter. There is no Supabase key in browser runtime-config. `npm run supabase:check` reads both track leaderboards and reports missing migration/authentication errors without logging credentials. See [easy setup](../../docs/quickstart-rewards.md).
+
+For gas sponsorship, apply `002_sponsored_claims.sql` after001. Its separate ndobol_relay RPC and table remain service-role-only under RLS. Do not expose raw transaction outbox access to the browser.

@@ -1,0 +1,37 @@
+{
+  "chainId": 10143,
+  "network": "Monad Testnet",
+  "createdAt": "2026-10-24T10:54:54.156Z",
+  "transactions": {
+    "deploy": {
+      "hash": "0xd9ad78ebb4bd6113ca58363d677e10c652553c8c9c97a674262814fa6b7c9176",
+      "status": "success",
+      "blockNumber": "73795374",
+      "gasMON": "0.098013534"
+    },
+    "fundPool": {
+      "hash": "0xa3fe80d60d95299111162860a26bd2df0a37a495a41404cc78126d8517847362",
+      "amountMON": "0.01",
+      "status": "success",
+      "blockNumber": "73795377",
+      "gasMON": "0.002326926"
+    },
+    "fundRelayer": {
+      "hash": "0x885b812166208984185aa759d651cec5ea8dde713fe26342d4d89e6fe3de806a",
+      "amountMON": "0.20",
+      "status": "success",
+      "blockNumber": "73795380",
+      "gasMON": "0.00215883"
+    }
+  },
+  "relayer": "0xC723c3b0F3A284C0356eF5C0536B218999f52363",
+  "owner": "0x8B4502AE90C985bd42e807dc7EDa8EAb37874250",
+  "signer": "0xf2E91197bFE16c146986fC89c08778dADE80b307",
+  "previousContract": "0x94cb1588221e14f34563eede5401646df3730d4a",
+  "dailyBudgetMON": "0.1",
+  "maxGasPriceWei": "150000000000",
+  "contract": "0x51fe1d32d251c57b6148ecf6d4b591bf0a9d3579",
+  "poolMON": "0.01",
+  "relayerMON": "0.2",
+  "verifiedAt": "2026-10-24T10:54:57.523Z"
+}

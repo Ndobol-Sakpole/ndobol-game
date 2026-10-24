@@ -28,9 +28,9 @@ export function encodeRewardClaim(proof, config) {
   // Nine fixed struct words, one bytes offset, then signature length/data/padding.
   return "0xa6603a85" + fields.join("") + word(320) + word(65) + proof.signature.slice(2).padEnd(192, "0");
 }
-export function matchesRewardReceipt(proof, receipt) {
+export function matchesRewardReceipt(proof, receipt, sender = proof.message.player) {
   const m = proof.message, pool = proof.domain.verifyingContract.toLowerCase();
-  return receipt.to?.toLowerCase() === pool && receipt.from?.toLowerCase() === m.player.toLowerCase() &&
+  return receipt.to?.toLowerCase() === pool && receipt.from?.toLowerCase() === sender.toLowerCase() &&
     receipt.logs?.some(log => log.address?.toLowerCase() === pool &&
       log.topics?.[0]?.toLowerCase() === REWARD_CLAIMED_TOPIC &&
       log.topics?.[1]?.toLowerCase() === m.roundId.toLowerCase() &&

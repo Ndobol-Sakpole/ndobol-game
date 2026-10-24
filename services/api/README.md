@@ -16,3 +16,6 @@ Reward v5: GET /rewards/config mengembalikan chainId/contract/enabled publik. PO
 Protocol4 requires wallet ownership: POST /auth/challenge and /auth/verify; exact-origin CORS for Vercel. createApiServer accepts persistence adapter and walletRequired=true (false only for in-process tests). Production entry uses DATA_BACKEND=supabase and Render PORT. Store methods and signer.get may be async; saved state follows commit.
 
 Render entry: `npm run start:api`, assigned `PORT`, `HOST` defaults to `0.0.0.0` when `RENDER=true`; local default remains `127.0.0.1`. `npm run build:api` only checks dependency imports. Node is bounded to series24 (minimum24.5). Exact CORS origins and Supabase runtime configuration are still required in production. See docs/deployment.md.
+
+## Gas sponsor
+`POST /rounds/claim` uses a persisted server proof and the round bearer token. `createApiServer` accepts `sponsoring`; `/rewards/config` adds sponsored/relayer. One API instance serializes a dedicated relayer. See [sponsored claims](../../docs/sponsored-claims.md).

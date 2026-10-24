@@ -67,3 +67,6 @@ Every current envelope is `{v:4,type,payload}`. The v3 section above is historic
 `fart:true` remains active between packets; false releases. Maximum impulse rate stays GAME.minFartInterval. Stale input stops after 350ms. Player snapshots add thrustActive:boolean. Blur/hidden/cancel clears browser controls and sound.
 
 Cloud snapshots include persistence.saving/saved/error. saved:true follows successful commit only; failure is SAVE_FAILED. Results wait for saved evidence before signing. No client score/mass accepted. runtime-config.js supplies public HTTPS/WSS endpoints; sockets connect directly to Render with exact-origin checks.
+
+## Sponsored claim extension
+GET /rewards/config adds sponsored and relayer. POST /rounds/claim accepts only roundId with the round bearer token; responses include pending/confirmed/failed, hash, recipient, rewardWei, gasPayer, playerGasWei and verified receipt. It is idempotent across restart. Room protocol remains4. See [sponsored-claims.md](sponsored-claims.md).

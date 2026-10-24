@@ -81,3 +81,6 @@ New rounds use `rules_version=4`: no synchrony points, score = trash×100 + comp
 Manual guest/address entry above is historical. EIP-191 login proves EOA ownership before create/join/resume and grants no token/transfer permission. The server-fixed wallet address is included in persisted EIP-712 evidence. Weighted proof schema and RiverRewards stay unchanged. Public UI follows wallet → create/join → ready/start → results → explicit claim. Local simulation is retained for tests, never unsigned payouts.
 
 Store methods may return promises; createSigner().get is now async and all callers await it. Supabase commits signature+nonce atomically with row locking and unique round/player and wallet/nonce constraints. Failed/uncertain writes never return an unpersisted proof. Duplicate requests recover through authenticated GET after409. Deployment/funding and remaining live verification: [deployment.md](deployment.md).
+
+## Gas sponsorship
+The EIP-712 payload and domain version stay unchanged; the new pool address binds proofs to the sponsored deployment. claimFor pays the signed player while the relayer pays gas. Previously issued proofs cannot be migrated to another contract. See [sponsored-claims.md](sponsored-claims.md).

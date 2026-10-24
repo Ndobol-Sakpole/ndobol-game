@@ -9,3 +9,5 @@ V5 options tambahan: rewardPool=REWARD_POOL_ADDRESS, claimsEnabled=REWARD_CLAIMS
 Store calls and get are awaited. See data/supabase for transactional nonce/signature writes. Wallet ownership is required at room entry; EIP-712 proof format remains v5.
 
 Setup behavior: a key may be prepared before deployment with claims disabled. Without a configured verifier, signing stays disabled and the API can still run. Claims explicitly enabled without a key/pool fail startup. Modern Supabase server keys use SUPABASE_SECRET_KEY; no browser key is used.
+
+`sponsor.js:createSponsor(store,signer,options)` exposes enabled/address/claim(roundId,token). It saves signed transaction bytes and a daily fee reservation before broadcast, verifies receipts and resumes the same hash after restart. Testnet10143 only. See docs/sponsored-claims.md.
