@@ -5,23 +5,26 @@
   "type": "module",
   "description": "Cooperative river game with procedural 3D worlds and Monad Testnet rewards",
   "engines": {
-    "node": ">=24.5.0"
+    "node": ">=24.5.0 <25"
   },
   "scripts": {
     "dev": "node infra/dev.js",
     "start": "node infra/dev.js",
-    "build": "node infra/build-game.js",
-    "test": "node --test --test-concurrency=1 tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/session.test.js tests/cloud.test.js",
+    "build": "node infra/build-target.js",
+    "test": "node --test --test-concurrency=1 tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/session.test.js tests/cloud.test.js tests/deployment.test.js",
     "game": "node infra/static-server.js",
     "api": "node services/api/server.js",
-    "lint": "eslint apps/web/js services/api shared data/store.js infra/static-server.js infra/dev.js infra/scripts/export-abi.js infra/scripts/load-test.js tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/helpers.js tests/session.test.js data/supabase-store.js data/validate-round.js infra/build-game.js infra/scripts/testnet-rewards.js tests/cloud.test.js",
-    "test:game": "node --test --test-concurrency=1 tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/session.test.js tests/cloud.test.js",
+    "lint": "eslint apps/web/js services/api shared data/store.js infra/static-server.js infra/dev.js infra/scripts/export-abi.js infra/scripts/load-test.js tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/helpers.js tests/session.test.js data/supabase-store.js data/validate-round.js infra/build-game.js infra/scripts/testnet-rewards.js tests/cloud.test.js infra/build-target.js tests/deployment.test.js",
+    "test:game": "node --test --test-concurrency=1 tests/game.test.js tests/rules.test.js tests/multiplayer.test.js tests/signing.test.js tests/session.test.js tests/cloud.test.js tests/deployment.test.js",
     "data:init": "python3 infra/scripts/database.py --seed",
     "contracts:test": "forge test --root contracts",
     "contracts:abi": "node infra/scripts/export-abi.js",
     "test:load": "node infra/scripts/load-test.js",
     "build:game": "node infra/build-game.js",
-    "testnet:rewards": "node infra/scripts/testnet-rewards.js"
+    "testnet:rewards": "node infra/scripts/testnet-rewards.js",
+    "build:api": "node infra/build-target.js api",
+    "build:vercel": "node infra/build-target.js vercel",
+    "start:api": "node services/api/server.js"
   },
   "devDependencies": {
     "eslint": "9.39.1",

@@ -5,12 +5,12 @@ services:
     runtime: node
     plan: free
     numInstances: 1
-    buildCommand: npm ci --omit=dev --ignore-scripts
-    startCommand: node services/api/server.js
+    buildCommand: npm ci --omit=dev --ignore-scripts && npm run build:api
+    startCommand: npm run start:api
     healthCheckPath: /health
     envVars:
       - key: NODE_VERSION
-        value: 24.5.0
+        value: '24'
       - key: NODE_ENV
         value: production
       - key: HOST

@@ -139,11 +139,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       },
     }),
     port = Number(process.env.PORT || process.env.API_PORT || 8787),
-    host = process.env.HOST || "127.0.0.1";
+    host = process.env.HOST || (process.env.RENDER === "true" ? "0.0.0.0" : "127.0.0.1");
   if (process.env.DATA_BACKEND === "supabase") await server.store.leaderboard("bengawan");
   server.listen(port, host, () =>
     console.log(
-      `Ndobol API: http://${host}:${port} · signing ${server.signer.enabled ? "enabled" : "unconfigured"}`,
+      `Ndobol API: http://${host}:${server.address().port} · signing ${server.signer.enabled ? "enabled" : "unconfigured"}`,
     ),
   );
   for (const signal of ["SIGINT", "SIGTERM"])

@@ -128,3 +128,10 @@ Release-check note: a fresh-install parallel suite passed94/95 with a0.749m late
 The repeated serial suite still observed one latency outlier0.582m (94/95 passed). The RTT harness now samples both clients at exactly the same timestamp and reports timer lateness. Deliveries delayed more than20ms beyond the injected RTT invalidate measurements until the buffers refill; at least21 valid comparisons are required, with the existing0.55m threshold unchanged. This separates the100/150ms network test from unbounded host scheduling delays. The packet-starvation deterministic test still verifies bounded extrapolation; severe host-stall smoothness is not certified.
 
 Final rerun after harness correction: **95/95 passed** in21.5s; latency test164 valid comparisons, maximum drift0.029m, **zero excluded/delayed deliveries**, maximum timer lateness5ms. Exported repository lint also passed. The earlier outliers remain above for transparency.
+
+
+### Deployment regression verification — 24 October 2026
+
+Node 24.5.0 on the local development machine: `npm test` **100/100 passed**, total 29.0s; `npm run lint` and `npm run build:vercel` passed. Five added deployment checks cover Render API import validation without PUBLIC_API_ORIGIN, Vercel default endpoint and independent override, HTTPS-origin rejection, and Render startup on the assigned port with no web child. Startup smoke received /health=200 and rejected an unknown origin with 403. No real Supabase or blockchain write was made.
+
+The existing 100/150ms injected-RTT WebSocket test recorded 156 valid pose comparisons, maximum divergence 0.019m; two host-delayed deliveries (maximum timer lateness38ms) were excluded under the previously documented harness rule. This is not a new device FPS measurement. A read-only request to the supplied public Render /health timed out after20s before redeployment; cloud readiness remains unverified.

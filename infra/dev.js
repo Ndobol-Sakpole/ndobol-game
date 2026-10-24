@@ -1,13 +1,15 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-if (existsSync(".env")) process.loadEnvFile(".env");
+const onRender = process.env.RENDER === "true";
+if (!onRender && existsSync(".env")) process.loadEnvFile(".env");
 const env = {
   ...process.env,
   API_ORIGIN:
     process.env.API_ORIGIN ||
     `http://127.0.0.1:${process.env.API_PORT || 8787}`,
 };
-const children = ["services/api/server.js", "infra/static-server.js"].map(
+const files = onRender ? ["services/api/server.js"] : ["services/api/server.js", "infra/static-server.js"];
+const children = files.map(
   (file) => spawn(process.execPath, [file], { stdio: "inherit", env }),
 );
 let stopping = false;

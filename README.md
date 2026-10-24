@@ -135,19 +135,61 @@ Buat project Supabase. Buka **SQL Editor**, tempel isi [data/supabase/001_game.s
 
 ### B. Render
 
-Hubungkan repo ini sebagai **Blueprint**; Render membaca `render.yaml`. Gunakan **satu instance**. Isi `SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY`. Isi `ALLOWED_ORIGINS` dengan origin HTTPS web Anda, misalnya `https://nama-game.vercel.app`, tanpa garis miring/path. Jika URL Vercel belum ada, pakai sementara `https://game.example.invalid` dan ganti setelah langkah C; login belum akan diterima sebelum origin benar.
+Jika layanan sudah dibuat manual, **tidak perlu membuat layanan baru**. Buka layanan Anda → **Settings → Build & Deploy**, lalu isi:
 
-Untuk klaim, isi `SIGNER_PRIVATE_KEY` dan `REWARD_POOL_ADDRESS` dari langkah 4. Biarkan `REWARD_CLAIMS_ENABLED=false` sampai kontrak siap. Jangan taruh key deployer di Render. Sesudah layanan aktif, buka `https://alamat-api-anda.onrender.com/health`; respons harus memuat `"ok":true`.
+| Pengaturan | Isi |
+| --- | --- |
+| Branch | `main` |
+| Root Directory | Kosong (folder utama repo) |
+| Build Command | `npm ci --omit=dev --ignore-scripts && npm run build:api` |
+| Start Command | `npm run start:api` |
+| Health Check Path | `/health` |
+
+Buka **Environment** lalu tambahkan:
+
+| Nama | Nilai |
+| --- | --- |
+| `NODE_VERSION` | `24` |
+| `NODE_ENV` | `production` |
+| `HOST` | `0.0.0.0` |
+| `DATA_BACKEND` | `supabase` |
+| `TRUST_PROXY` | `true` |
+| `SUPABASE_URL` | Project URL dari Supabase Anda |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service-role key dari Supabase Anda |
+| `ALLOWED_ORIGINS` | URL web Vercel Anda, misalnya `https://nama-game.vercel.app` |
+| `SIGNING_CHAIN_ID` | `10143` |
+| `REWARD_CLAIMS_ENABLED` | `false` selama kontrak belum siap |
+
+`ALLOWED_ORIGINS` harus alamat web yang dibuka pemain, **bukan alamat API Render**. Tanpa `/` di akhir atau `/apps/web/index.html`. Jika perlu beberapa alamat, pisahkan dengan koma. Jangan pakai `*`. Bila Vercel belum punya alamat, isi sementara `https://game.example.invalid`; ganti setelah langkah C agar login bisa diterima.
+
+Untuk pemasangan pertama tanpa kontrak, biarkan **keduanya** kosong: `SIGNER_PRIVATE_KEY` dan `REWARD_POOL_ADDRESS`. Setelah kontrak dari langkah 4 siap, isi keduanya dan aktifkan klaim. Jangan taruh key deployer di Render.
+
+Simpan perubahan, lalu pilih **Manual Deploy → Deploy latest commit**. Periksa log sampai API berjalan. Layanan proyek ini: [https://ndobol-game.onrender.com/health](https://ndobol-game.onrender.com/health). Hasil yang benar memuat `"ok":true`. Untuk salinan proyek sendiri, gunakan URL Render Anda.
+
+Alternatif pemasangan baru: pilih **Blueprint** dan hubungkan repo ini; Render membaca `render.yaml`. Tetap isi variabel di atas dan gunakan **satu instance**. `PUBLIC_API_ORIGIN` tidak diperlukan oleh API Render. Jika pengaturan lama masih memakai `npm run build`/`npm start`, skrip sekarang otomatis memilih API saat berada di Render.
 
 ### C. Vercel
 
-Import repo ini, pilih preset **Other**, Node **24.x**, root directory tetap folder utama. Tambahkan environment variable:
+Import repo ini, pilih preset **Other**, Node **24.x**, root directory tetap folder utama. `vercel.json` sudah mengatur build `npm run build:vercel` dan hasil `dist/game`.
+
+Buka project → **Settings → Environment Variables**. Tambahkan:
 
 ```text
-PUBLIC_API_ORIGIN=https://alamat-api-anda.onrender.com
+Nama: PUBLIC_API_ORIGIN
+Nilai: https://ndobol-game.onrender.com
+Lingkungan: Production, Preview
 ```
 
-Vercel membaca `vercel.json`: build `npm run build:game`, hasil `dist/game`. Build hanya menyalin file native dan menulis alamat API publik; tidak memakai bundler. Setelah deploy, perbarui `ALLOWED_ORIGINS` di Render menjadi origin Vercel yang sebenarnya, lalu redeploy Render. Buka URL Vercel, hubungkan wallet, buat room, dan uji dengan wallet kedua.
+Ini alamat **API Render**, bukan alamat web Vercel. Jangan tambahkan `/health`, `/api`, atau `/rooms`. Alamat di atas sudah menjadi bawaan build Vercel proyek ini; variabel dapat menggantinya. **Jika memasang salinan proyek, wajib isi URL API milik Anda sendiri** agar tidak menghubungkan pemain ke server proyek asli.
+
+Buka **Deployments**, deploy commit terbaru dari branch `main`. Jika mengulangi deployment lama, pastikan sumber commit sudah memuat perbaikan ini; redeploy commit lama akan mengulangi error lama. Setelah status **Ready**, buka tombol **Visit**, salin origin URL web (misalnya `https://nama-game.vercel.app`), lalu:
+
+1. Buka Render → layanan API → **Environment**.
+2. Ubah `ALLOWED_ORIGINS` menjadi URL web tersebut, tanpa path atau garis miring terakhir.
+3. Simpan dan redeploy Render. Tunggu `/health` kembali memuat `"ok":true`.
+4. Muat ulang halaman Vercel, hubungkan wallet, buat room, lalu uji dengan wallet kedua.
+
+Build hanya menyalin file native dan menulis alamat API publik; tidak memakai bundler. Jangan menaruh private key atau service-role key di Vercel.
 
 Render free dapat tidur saat tidak dipakai. Restart/deploy server mengakhiri room yang masih berjalan, tetapi data hasil di Supabase tetap ada. Pilih layanan yang selalu aktif jika diperlukan; pilihan paket dan biaya Anda tentukan sendiri. Vercel tidak menjalankan server WebSocket game ini. Konfigurasi terperinci: [docs/deployment.md](docs/deployment.md).
 
@@ -174,6 +216,8 @@ Buka URL lokal yang sama pada port 4174. Untuk berhenti, tekan Ctrl+C lalu `dock
 | Wallet tidak tersedia | Gunakan browser dengan wallet aktif; browser preview aplikasi mungkin tidak punya extension wallet. |
 | Login ditolak / `ORIGIN_NOT_ALLOWED` | Pastikan API aktif dan `ALLOWED_ORIGINS` sama persis dengan origin browser. Coba login ulang setelah API restart. |
 | Room teman tidak ditemukan | Pastikan kedua pemain memakai deployment yang sama dan kode room benar. |
+| Build gagal `Set PUBLIC_API_ORIGIN` | Gunakan commit terbaru. Render: `npm run build:api`. Vercel: `npm run build:vercel` dan isi `PUBLIC_API_ORIGIN` seperti bagian 5. |
+| API gagal setelah build berhasil | Periksa `ALLOWED_ORIGINS`, URL/key Supabase dan migrasi SQL. Selama belum ada kontrak, kosongkan key signer dan pool sekaligus. |
 | Klaim nonaktif | Selesaikan ronde server, ambil sampah sendiri, jangan mati; pengelola perlu menyiapkan key signer, kontrak, dana, dan flag klaim. |
 | Transaksi klaim gagal | Periksa jaringan10143, wallet penerima, test MON untuk gas, batas waktu bukti, dan saldo pool. Jangan menganggap gagal berarti sudah dibayar. |
 | Game lambat | Pilih kualitas rendah, tutup tab3D lain, aktifkan akselerasi grafis. |
