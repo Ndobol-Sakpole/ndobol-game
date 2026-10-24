@@ -188,8 +188,8 @@ const errorCopy = {
   REWARD_FORFEITED: ["Reward hangus karena kru gugur.", "Reward forfeited: crew lost."],
   NO_REWARD: ["Belum ada berat sampah untuk diklaim.", "No collected weight to claim."],
   SIGNING_DISABLED: [
-    "Hasil tersimpan; kunci penandatangan server belum dikonfigurasi.",
-    "Result saved; server signing key is not configured.",
+    "Hasil tersimpan; layanan reward belum siap. Pengelola perlu menyiapkan kontrak pool dan konfigurasi penandatanganan.",
+    "Result saved; rewards are not ready. The operator must configure the pool contract and result signing.",
   ],
   ADDRESS_IN_ROOM: [
     "Alamat ini sudah digunakan dalam room.",

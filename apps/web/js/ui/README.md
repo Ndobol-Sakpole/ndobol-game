@@ -12,3 +12,5 @@ HUD menampilkan gram/kg, jumlah benda dan estimasi MON pribadi. Fatal banner/res
 
 ## Current revision — 24 October 2026
 Public flow requires wallet: createWalletUI.ensure() connects/switches testnet/verifies login, then createUI.enter() opens create/join lobby. No guest/solo bypass button; create+ready+start supports one human with bots. Result signing waits for asynchronous persistence.
+
+SIGNING_DISABLED explains that reward setup includes both the pool contract and signer configuration. A prepared signer key alone does not activate claims. No public UI interface changed.

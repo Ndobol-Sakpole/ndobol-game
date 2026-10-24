@@ -142,3 +142,15 @@ The existing 100/150ms injected-RTT WebSocket test recorded 156 valid pose compa
 The production Supabase project migration was applied successfully in its SQL Editor. The local native-fetch adapter then read both track leaderboards through the deployed private RPC using a modern server secret key; both returned valid empty arrays. This confirms migration and read connectivity, not a completed on-chain claim.
 
 After adding secret-key header compatibility, a non-rotating testnet key preparation command, and disabled-signing startup support: **104/104 JavaScript tests passed**, total20.8s. Lint and Vercel packaging passed. No private key or database credential is included in this record. Testnet deployment/funding/claim receipts remain pending until the deployer receives gas funds.
+
+### Live cloud verification — 24 October 2026, 17:33 WIB
+
+Render deployed source `ba8cbc1` successfully using Node 24.22.1 and `npm run build:api`. The Vercel game rendered its 3D start screen; runtime config points to the Render HTTPS/WSS endpoints, and the Three.js and shared protocol modules returned HTTP 200. Render health reported protocol 4 / 30 Hz; this configured tick rate is not a measured load-test result. The Supabase secret and server signer were configured only on the API; the deployer key stayed local.
+
+Live API testing verified EIP-191 logins for two test wallets, the allowed Vercel CORS origin, and HTTP 403 for an unknown origin. An automated client sent gameplay inputs to real server rooms: Mataram solo with bots reached the finish in 84.8 simulation seconds; Progo with two client slots and bots reached it in 96.8 seconds. Both persisted records were independently read through the private Supabase adapter and appeared in the public per-track leaderboard. These are test rounds named `Uji deployment`, not evidence of physical litter collection or MON payment.
+
+The first CLI observer timed out before observing the final snapshots; the database records nevertheless confirmed both finishes. A repeat Mataram run using the same application ping heartbeat as the browser received `finished` → `saved:true` → `results`, finishing in 82.03 simulation seconds with 59 g collected by the client. Snapshot delivery timestamps at those transitions differed from the local clock by 60–64 ms; clocks were not synchronized, so this is not a certified network-latency measurement. The repeat exited successfully. No root cause is assigned to the first observer timeout without further evidence.
+
+[Public verification record](cloud-verification-2026-10-24.json) contains round IDs and sanitized result fields. Initial leaderboard counts may grow as people play. The sign-disabled UI copy now covers both contract and signer setup; lint and Vercel packaging passed after this text change. No new performance/FPS claim or remote CI result is implied.
+
+Monad Testnet deployer balance remained zero at the check. `/rewards/config` returned `contract:null, enabled:false`; no deployment, funding, or claim transaction was broadcast. On-chain receipt evidence remains pending.

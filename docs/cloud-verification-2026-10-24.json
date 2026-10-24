@@ -1,0 +1,104 @@
+{
+  "checkedAt": "2026-10-24T10:33:41.780Z",
+  "sourceCommit": "ba8cbc16bfcf77a37ab065fac73d1c1e685eb3e9",
+  "web": "https://ndobol-game-teal.vercel.app",
+  "api": "https://ndobol-game.onrender.com",
+  "chainId": 10143,
+  "checks": {
+    "health": true,
+    "exactOriginCors": true,
+    "eip191Login": true,
+    "supabasePersistence": true,
+    "leaderboardBothTracks": true
+  },
+  "persistedRounds": [
+    {
+      "trackId": "bengawan",
+      "roundId": "21247c94-d918-4584-b344-c42fff56064f",
+      "clients": 1,
+      "players": [
+        {
+          "round_id": "21247c94-d918-4584-b344-c42fff56064f",
+          "track_id": "bengawan",
+          "reason": "finish",
+          "completed": true,
+          "duration_ms": 84800,
+          "mode": "online",
+          "rules_version": 5,
+          "name": "Uji deployment 1",
+          "address": "0x97e495ba652ebdafa41e6611053a61e41c4813f3",
+          "score": 100,
+          "trash": 4,
+          "weight_grams": 100,
+          "reward_wei": "1000000000000"
+        }
+      ]
+    },
+    {
+      "trackId": "mahakam",
+      "roundId": "793540a8-76ac-42bf-accf-2214fed3ac64",
+      "clients": 2,
+      "players": [
+        {
+          "round_id": "793540a8-76ac-42bf-accf-2214fed3ac64",
+          "track_id": "mahakam",
+          "reason": "finish",
+          "completed": true,
+          "duration_ms": 96800,
+          "mode": "online",
+          "rules_version": 5,
+          "name": "Uji deployment 1",
+          "address": "0x97e495ba652ebdafa41e6611053a61e41c4813f3",
+          "score": 147,
+          "trash": 6,
+          "weight_grams": 147,
+          "reward_wei": "1470000000000"
+        },
+        {
+          "round_id": "793540a8-76ac-42bf-accf-2214fed3ac64",
+          "track_id": "mahakam",
+          "reason": "finish",
+          "completed": true,
+          "duration_ms": 96800,
+          "mode": "online",
+          "rules_version": 5,
+          "name": "Uji deployment 2",
+          "address": "0xee410e2e1bd4936760b9c470e5df27a4a9caf984",
+          "score": 12,
+          "trash": 1,
+          "weight_grams": 12,
+          "reward_wei": "120000000000"
+        }
+      ]
+    }
+  ],
+  "resultDelivery": [
+    {
+      "trackId": "bengawan",
+      "roundId": "2d0fb2ab-e144-433c-8209-784a0209312c",
+      "clients": 1,
+      "reason": "finish",
+      "saved": true,
+      "elapsed": 82.03333333333124,
+      "s": 362.0513169155629,
+      "players": [
+        {
+          "playerId": "83c5e187-d8e8-4470-83f3-90bea8a81dd2",
+          "address": "0x97e495ba652ebdafa41e6611053a61e41c4813f3",
+          "score": 59,
+          "trash": 3,
+          "weightGrams": 59,
+          "rewardWei": "590000000000"
+        }
+      ]
+    }
+  ],
+  "limitation": "The first multi-room CLI observer timed out before observing final snapshots; persisted evidence was verified separately. A repeat with the browser-style application heartbeat received finished, saved, and results snapshots successfully.",
+  "blockchain": {
+    "deployed": false,
+    "funded": false,
+    "claimed": false,
+    "transactions": [],
+    "blocker": "Deployer test MON balance is zero; no transaction broadcast."
+  }
+}

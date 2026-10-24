@@ -8,6 +8,8 @@ Sungainya terinspirasi **Selokan Mataram** dan **Kali Progo**. Mataram punya din
 
 Proyek ini open source, dibuat oleh tim **DeEs**. Anda boleh menjalankan, mempelajari, dan mengembangkan kodenya sesuai [lisensi MIT](LICENSE). Ini masih prototipe: belum ada marketplace atau pembelian getek. Semua getek di garasi bebas dicoba.
 
+**Main lewat internet:** [buka Ndobol Sesarengan](https://ndobol-game-teal.vercel.app/apps/web/index.html). Buka dengan browser yang memiliki MetaMask atau wallet EVM lain. Web Vercel, API Render, dan database Supabase sudah tersambung. **Klaim MON belum aktif** sampai kontrak dideploy dan pool diisi; lihat [status dan bukti](#bukti-kesiapan-dan-transaksi-monad-testnet) di bawah.
+
 ## Baca ini sebelum mulai
 
 - **Wallet wajib**, termasuk jika bermain sendiri. Gunakan browser dengan wallet EVM yang menyediakan koneksi browser, misalnya MetaMask. Di ponsel, buka game melalui browser di dalam aplikasi wallet.
@@ -98,20 +100,20 @@ Pemain memerlukan sedikit test MON untuk biaya gas klaim. Ambil melalui [faucet 
 
 Langkah ini diperlukan hanya jika ingin membayar reward. Siapkan wallet pengelola dengan test MON, alamat owner, serta wallet signer server yang terpisah. Jangan bagikan private key di chat, GitHub, atau frontend.
 
-1. Pasang [Foundry](https://getfoundry.sh/). Jalankan `forge build --root contracts` untuk membuat bytecode kontrak.
-2. Buat salinan `.env.example` bernama **`.env`** di folder proyek. File ini sudah dikecualikan dari Git. Di Windows gunakan `Copy-Item .env.example .env`; di macOS/Linux gunakan `cp .env.example .env`.
-3. Isi `DEPLOYER_PRIVATE_KEY`, `CONTRACT_OWNER`, `REWARD_SIGNER_ADDRESS`, dan `SIGNER_PRIVATE_KEY`. Alamat signer harus berasal dari key signer; owner adalah alamat publik pengelola.
+1. Dari folder proyek, jalankan `npm run testnet:prepare`. Perintah ini membuat **`.env`**, menyiapkan wallet deployer dan signer terpisah, serta menampilkan alamat publiknya. Jika file/key sudah ada, isinya dipertahankan. Simpan cadangan `.env` secara privat; jangan menimpa file ini setelah wallet diisi.
+2. Kirim test MON ke alamat **deployer** yang muncul: MetaMask → pilih Monad Testnet → **Kirim/Send** → alamat deployer → isi jumlah → konfirmasi. Untuk demo, siapkan 1 test MON untuk gas dan pool awal; biaya gas dapat berubah. Owner bawaan adalah deployer; untuk memakai wallet pengelola lain, isi alamat publiknya pada `CONTRACT_OWNER` sebelum deploy.
+3. Pasang [Foundry](https://getfoundry.sh/). Jalankan `forge build --root contracts` lalu `forge test --root contracts`. Signer tidak memerlukan saldo; jangan kirim dana pool ke alamat signer.
 4. Deploy kontrak:
 
 ```sh
-node --env-file=.env infra/scripts/testnet-rewards.js deploy
+npm run testnet:rewards -- deploy
 ```
 
-5. Salin alamat hasil deploy ke `REWARD_POOL_ADDRESS` di `.env`. Isi `FUND_MON` dengan jumlah test MON yang sengaja ingin Anda masukkan ke pool, lalu jalankan:
+5. Salin alamat hasil deploy ke `REWARD_POOL_ADDRESS` di `.env`. Isi `FUND_MON=0.01` untuk memasukkan 0,01 test MON ke pool demo, lalu jalankan:
 
 ```sh
-node --env-file=.env infra/scripts/testnet-rewards.js fund
-node --env-file=.env infra/scripts/testnet-rewards.js check
+npm run testnet:rewards -- fund
+npm run testnet:rewards -- check
 ```
 
 6. Setelah pemeriksaan benar, pool berisi dana dan tidak paused, isi `SIGNING_CHAIN_ID=10143` dan `REWARD_CLAIMS_ENABLED=true`. Restart server dengan Ctrl+C lalu `npm run dev`.
@@ -123,7 +125,17 @@ Panduan langkah sederhana untuk database, wallet deployer, deploy, isi pool, dan
 
 ## Bukti kesiapan dan transaksi Monad Testnet
 
-Jaringan: **Monad Testnet**, chain ID **10143**. Supabase sudah dibuat, migrasi game berhasil, dan pembacaan leaderboard kedua track melalui RPC privat berhasil pada24 Oktober2026. Pengujian lokal:104 tes JavaScript, lint, dan build Vercel lulus.
+Jaringan: **Monad Testnet**, chain ID **10143**. Pemeriksaan pada **24 Oktober 2026**:
+
+| Layanan | Bukti yang sudah diperiksa |
+| --- | --- |
+| [Web Vercel](https://ndobol-game-teal.vercel.app/apps/web/index.html) | Scene 3D dan tombol mulai tampil; modul Three.js dan protokol tersedia. |
+| [API Render](https://ndobol-game.onrender.com/health) | Deploy sukses; `ok:true`, protokol 4, simulasi 30 Hz. |
+| Supabase | Migrasi berhasil; leaderboard kedua track terbaca melalui API server. |
+| Ronde publik otomatis | Mataram dan Progo mencapai finis; hasil tersimpan. Uji ulang Mataram menerima layar hasil dengan status penyimpanan sukses. [Catatan rinci](docs/cloud-verification-2026-10-24.json). |
+| Pengujian lokal | 104 tes JavaScript, lint, dan build Vercel lulus. |
+
+Status klaim dapat dilihat di [konfigurasi reward publik](https://ndobol-game.onrender.com/rewards/config). Saat catatan ini dibuat, nilainya `contract:null` dan `enabled:false`.
 
 | Bukti on-chain | Status |
 | --- | --- |
@@ -233,6 +245,7 @@ Buka URL lokal yang sama pada port 4174. Untuk berhenti, tekan Ctrl+C lalu `dock
 | Build gagal `Set PUBLIC_API_ORIGIN` | Gunakan commit terbaru. Render: `npm run build:api`. Vercel: `npm run build:vercel` dan isi `PUBLIC_API_ORIGIN` seperti bagian 5. |
 | API gagal setelah build berhasil | Periksa `ALLOWED_ORIGINS`, URL/key Supabase dan migrasi SQL. Selama belum ada kontrak, biarkan pool kosong dan flag klaim false. |
 | Klaim nonaktif | Selesaikan ronde server, ambil sampah sendiri, jangan mati; pengelola perlu menyiapkan key signer, kontrak, dana, dan flag klaim. |
+| Key signer sudah diisi tetapi klaim belum aktif | Key saja belum cukup. Buka `/rewards/config` pada API; jika `contract:null`, deploy kontrak lalu isi `REWARD_POOL_ADDRESS`. Danai pool sebelum mengaktifkan `REWARD_CLAIMS_ENABLED`. |
 | Transaksi klaim gagal | Periksa jaringan10143, wallet penerima, test MON untuk gas, batas waktu bukti, dan saldo pool. Jangan menganggap gagal berarti sudah dibayar. |
 | Game lambat | Pilih kualitas rendah, tutup tab3D lain, aktifkan akselerasi grafis. |
 
